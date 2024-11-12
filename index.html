@@ -2,9 +2,8 @@
 <html lang="zh-Hant">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>Timo百家輔助</title>
-    <!-- 引入本地字體 -->
     <style>
         @font-face {
             font-family: 'CustomFont';
@@ -17,9 +16,9 @@
         * { box-sizing: border-box; margin: 0; padding: 0; font-weight: normal; }
         body, button, select {
             font-family: 'CustomFont', serif;
-            background-color: #D3D3D3; /* 水泥灰背景色 */
-            color: #333; 
-            display: flex; 
+            background-color: #D3D3D3;
+            color: #333;
+            display: flex;
             flex-direction: column;
             align-items: center;
             padding: 20px;
@@ -46,7 +45,7 @@
         }
 
         /* 橫屏模式，包括手機橫屏和桌面寬屏 */
-        @media (min-width: 768px) and (orientation: landscape) {
+        @media (orientation: landscape) and (min-width: 500px) {
             .container {
                 flex-direction: row;
                 justify-content: space-between;
@@ -54,7 +53,7 @@
                 gap: 20px;
             }
             .panel {
-                width: 50%; 
+                width: 50%;
                 background-color: #ffffff;
                 border-radius: 12px;
                 box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
@@ -76,14 +75,14 @@
             .team-info {
                 display: block;
                 text-align: center;
-                font-size: 1.5em;
+                font-size: 1.7em;
                 color: #555;
-                margin-top: 10px;
+                margin-top: 15px;
             }
         }
 
         /* 直屏模式，包括手機豎屏 */
-        @media (max-width: 767px), (orientation: portrait) {
+        @media (orientation: portrait), (max-width: 499px) {
             .social-links.desktop {
                 display: none;
             }
@@ -318,7 +317,7 @@
 
     function checkFormula() {
         const formula = document.getElementById("formulaSelect").value;
-        currentFormula = formula;  
+        currentFormula = formula;
         updateHistoryDisplay();
         updateAccuracy();
         if (formula === "ThreePoint") {
