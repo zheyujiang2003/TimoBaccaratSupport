@@ -2,7 +2,7 @@
 <html lang="zh-Hant">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Timo百家輔助</title>
     <style>
         @font-face {
@@ -12,7 +12,7 @@
             font-style: normal;
         }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; font-weight: normal; text-align: center; }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
         body, button, select {
             font-family: 'CustomFont', serif;
             background-color: #D3D3D3;
@@ -20,19 +20,19 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            padding: 10px; /* 減小全局內邊距 */
+            padding: 20px;
+            text-align: center;
         }
-        h1 { 
-            font-size: 2em;
+        h1 {
+            font-size: 2.5em;
             margin-bottom: 15px;
-            color: #333;
         }
         
         .container {
             display: flex;
             flex-direction: column;
-            gap: 15px;
-            width: 95%;
+            gap: 20px;
+            width: 100%;
             max-width: 600px;
             background: #fff;
             border-radius: 10px;
@@ -45,15 +45,13 @@
         @media (orientation: landscape) and (max-width: 900px) {
             .container {
                 flex-direction: row;
-                justify-content: center;
-                width: 98%; /* 更貼近邊緣 */
-                gap: 8px;
-                padding: 15px;
+                justify-content: space-between;
+                width: 95%;
+                gap: 20px;
             }
             .panel {
                 width: 48%;
-                padding: 15px;
-                background-color: #ffffff;
+                padding: 20px;
                 border-radius: 10px;
                 box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
                 margin: 0;
@@ -74,14 +72,14 @@
             }
             /* 團隊資訊樣式優化 */
             .team-info {
-                font-size: 1.2em; /* 適當縮小以避免換行 */
+                font-size: 1.4em;
                 color: #555;
-                margin-top: 8px;
-                white-space: nowrap; /* 禁止換行 */
+                margin-top: 10px;
+                white-space: nowrap;
             }
         }
 
-        /* 垂直模式，包括手機豎屏 */
+        /* 直屏模式包括手機豎屏 */
         @media (orientation: portrait), (min-width: 901px) {
             .social-links.desktop {
                 display: none;
@@ -93,7 +91,7 @@
                 margin-top: 15px;
             }
             .team-info {
-                font-size: 1.1em;
+                font-size: 1.2em;
                 color: #555;
                 margin: 20px 0;
             }
@@ -105,7 +103,7 @@
             background-color: #ffffff;
             border-radius: 10px;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
-            margin-bottom: 15px;
+            margin-bottom: 20px;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -124,7 +122,7 @@
 
         input[type="text"] {
             width: 100%;
-            padding: 8px;
+            padding: 10px;
             font-size: 1em;
             border: 1px solid #ddd;
             border-radius: 8px;
@@ -140,14 +138,13 @@
         button, select {
             width: 100%;
             padding: 10px;
-            font-size: 0.9em;
+            font-size: 1em;
             color: white;
             border: none;
             border-radius: 8px;
             cursor: pointer;
             transition: all 0.3s ease;
             font-family: 'CustomFont', serif;
-            text-align: center;
         }
 
         button.calculate-btn { background-color: #0071e3; }
@@ -159,6 +156,7 @@
         select {
             background-color: #333333;
             color: #ffffff;
+            text-align: left;
             padding-left: 8px;
             -moz-text-align-last: center;
         }
@@ -168,11 +166,10 @@
             border-radius: 8px;
             background-color: #f9f9f9;
             box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
-            font-size: 0.9em;
+            font-size: 1em;
             color: #333;
             margin-top: 10px;
             width: 100%;
-            text-align: center;
         }
 
         .prediction-result h2 {
@@ -189,18 +186,19 @@
         .grid-container {
             display: grid;
             grid-template-columns: repeat(6, 1fr);
-            gap: 1px;
+            gap: 5px;
             padding: 5px;
             border-radius: 5px;
             background-color: #fafafa;
             border: 1px solid #ddd;
+            width: 100%;
         }
 
         .grid-item {
             display: flex;
             justify-content: center;
             align-items: center;
-            font-size: 1em;
+            font-size: 0.9em;
             color: #333;
             height: 40px;
             border: 1px solid #ddd;
