@@ -74,13 +74,11 @@
             }
             /* 橫屏模式下的虎翼團隊文字樣式 */
             .team-info {
-                position: absolute;
-                bottom: 10px; /* 往下移 */
-                left: 50%;
-                transform: translateX(-50%);
-                font-size: 1.8em; /* 放大字體 */
-                color: #555;
+                display: block;
                 text-align: center;
+                font-size: 1.5em; /* 放大字體 */
+                color: #555;
+                margin-top: 10px; /* 位於社交按鈕下方 */
             }
         }
 
@@ -97,10 +95,11 @@
             }
             /* 直屏時團隊訊息移動到兩個功能塊中間 */
             .team-info {
+                display: block;
                 text-align: center;
                 font-size: 1.3em; /* 調整字體大小 */
                 color: #555;
-                margin-top: 20px;
+                margin: 20px 0;
             }
         }
 
@@ -266,7 +265,7 @@
         <button class="calculate-btn" onclick="calculateResult()">計算結果</button>
         <button class="clear-btn" onclick="clearAll()">消除全部</button>
 
-        <!-- 橫屏模式下的社交按鈕和團隊訊息 -->
+        <!-- 橫屏模式的社交按鈕和團隊訊息 -->
         <div class="social-links desktop">
             <a href="https://youtube.com/channel/UCj1P2Tt82JtrbhVXui8DXcg?si=V9NidILTpYH3dTZx" target="_blank" class="youtube"></a>
             <a href="https://www.instagram.com/gamble_couple666/profilecard/?igsh=OGt1ZGJndHNiMTB4" target="_blank" class="instagram"></a>
