@@ -19,7 +19,7 @@
         }
 
         h1 { 
-            font-size: 2.5em; 
+            font-size: 2em; 
             margin-bottom: 20px; 
             color: #333; 
             text-align: center;
@@ -40,26 +40,12 @@
             align-items: center;
         }
 
-        /* RWD 佈局設定：螢幕寬度超過 768px 時，功能塊左右排列 */
-        @media (min-width: 768px) {
-            .container {
-                flex-direction: row;
-                align-items: flex-start;
-                max-width: 1200px;
-            }
-            .panel {
-                width: 48%;
-                margin-bottom: 0;
-            }
-        }
-
         .panel {
             width: 100%;
             padding: 15px;
             background-color: #ffffff;
             border-radius: 12px;
             box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
-            margin-bottom: 20px;
         }
 
         .input-group {
@@ -145,12 +131,6 @@
             border: 1px solid #ddd;
         }
 
-        @media (min-width: 768px) {
-            .grid-container {
-                grid-template-columns: repeat(12, 1fr); /* 提升橫屏顯示更多格子 */
-            }
-        }
-
         .grid-item {
             display: flex;
             justify-content: center;
@@ -205,6 +185,49 @@
         }
         .social-links .instagram { background-image: url('https://upload.wikimedia.org/wikipedia/commons/a/a5/Instagram_icon.png'); }
         .social-links .line { background-image: url('https://upload.wikimedia.org/wikipedia/commons/4/41/LINE_logo.svg'); }
+
+        /* 平板：調整為兩欄佈局 */
+        @media (min-width: 768px) and (max-width: 1024px) {
+            .container {
+                flex-direction: row;
+                align-items: flex-start;
+                max-width: 1024px;
+            }
+            .panel {
+                width: 48%;
+            }
+            .grid-container {
+                grid-template-columns: repeat(8, 1fr); /* 平板上顯示更多的格子 */
+            }
+        }
+
+        /* 手機：縮小字體和間距，並將容器內元素居中 */
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 1.5em;
+            }
+            .container {
+                padding: 15px;
+            }
+            .panel {
+                padding: 10px;
+            }
+            button, select {
+                padding: 10px;
+                font-size: 0.9em;
+            }
+            .grid-container {
+                grid-template-columns: repeat(4, 1fr); /* 手機上顯示4列格子 */
+            }
+        }
+
+        /* 桌面：將社交按鈕放到「計算結果」和「消除全部」按鈕下方 */
+        @media (min-width: 1025px) {
+            .panel .social-links {
+                width: 100%;
+                margin-top: 10px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -224,6 +247,13 @@
         </div>
         <button class="calculate-btn" onclick="calculateResult()">計算結果</button>
         <button class="clear-btn" onclick="clearAll()">消除全部</button>
+        
+        <!-- 桌面版將社交按鈕置於此處 -->
+        <div class="social-links">
+            <a href="https://youtube.com/channel/UCj1P2Tt82JtrbhVXui8DXcg?si=V9NidILTpYH3dTZx" target="_blank" class="youtube"></a>
+            <a href="https://www.instagram.com/gamble_couple666/profilecard/?igsh=OGt1ZGJndHNiMTB4" target="_blank" class="instagram"></a>
+            <a href="https://lin.ee/ivW2LRm" target="_blank" class="line"></a>
+        </div>
     </div>
 
     <div class="panel">
@@ -250,7 +280,8 @@
         </div>
     </div>
 
-    <div class="social-links">
+    <!-- 手機和平板版將社交按鈕置於此處 -->
+    <div class="social-links mobile">
         <a href="https://youtube.com/channel/UCj1P2Tt82JtrbhVXui8DXcg?si=V9NidILTpYH3dTZx" target="_blank" class="youtube"></a>
         <a href="https://www.instagram.com/gamble_couple666/profilecard/?igsh=OGt1ZGJndHNiMTB4" target="_blank" class="instagram"></a>
         <a href="https://lin.ee/ivW2LRm" target="_blank" class="line"></a>
