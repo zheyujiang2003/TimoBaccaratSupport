@@ -4,11 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Timo百家輔助</title>
-    <link href="https://fonts.googleapis.com/css2?family=ZCOOL+KuaiLe&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@900&display=swap" rel="stylesheet">
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { 
-            font-family: 'ZCOOL KuaiLe', sans-serif;
+            font-family: 'Noto Serif TC', serif;
             background-color: #f8f9fa; 
             color: #333; 
             display: flex; 
@@ -163,6 +163,11 @@
             color: white;
         }
 
+        .grid-item.heju {
+            background-color: #4CAF50;
+            color: white;
+        }
+
         .social-links {
             display: flex;
             gap: 15px;
@@ -174,9 +179,7 @@
             width: 50px;
             height: 50px;
             display: inline-block;
-            background-size: contain;
-            background-position: center;
-            background-repeat: no-repeat;
+            background-size: cover;
             border-radius: 50%;
             transition: transform 0.3s ease;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
@@ -186,7 +189,7 @@
             transform: scale(1.1);
         }
 
-        .social-links .youtube { background-image: url('https://upload.wikimedia.org/wikipedia/commons/0/09/YouTube_full-color_icon_%282017%29.svg'); }
+        .social-links .youtube { background-image: url('https://upload.wikimedia.org/wikipedia/commons/4/4f/YouTube_icon_%282013-2017%29.png'); }
         .social-links .instagram { background-image: url('https://upload.wikimedia.org/wikipedia/commons/a/a5/Instagram_icon.png'); }
         .social-links .line { background-image: url('https://upload.wikimedia.org/wikipedia/commons/4/41/LINE_logo.svg'); }
     </style>
@@ -325,7 +328,7 @@
 
         // 清空展示區
         items.forEach(item => {
-            item.classList.remove('zhuang', 'xian');
+            item.classList.remove('zhuang', 'xian', 'heju');
             item.innerText = '';
         });
 
@@ -343,6 +346,7 @@
                 targetItem.classList.add('xian');
                 targetItem.innerText = '閒';
             } else {
+                targetItem.classList.add('heju');
                 targetItem.innerText = '和';
             }
         });
