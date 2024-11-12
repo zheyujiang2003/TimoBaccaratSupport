@@ -50,11 +50,12 @@
         @media (min-width: 768px) and (orientation: landscape) {
             .container {
                 flex-direction: row;
-                justify-content: space-between;
+                align-items: flex-start;
                 max-width: 1200px;
             }
             .panel {
                 width: 48%;
+                margin-bottom: 0;
             }
         }
 
@@ -199,7 +200,7 @@
 
         .social-links .youtube { 
             background-image: url('https://upload.wikimedia.org/wikipedia/commons/0/09/YouTube_full-color_icon_%282017%29.svg'); 
-            background-position: left center; /* 向左偏移 */
+            background-position: -10px center; /* 向左偏移更多 */
             background-size: cover;
         }
         .social-links .instagram { background-image: url('https://upload.wikimedia.org/wikipedia/commons/a/a5/Instagram_icon.png'); }
