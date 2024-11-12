@@ -4,11 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Timo百家輔助</title>
-    <link href="https://fonts.googleapis.com/css2?family=ZCOOL+KuaiLe&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400&display=swap" rel="stylesheet">
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { 
-            font-family: 'ZCOOL KuaiLe', sans-serif;
+            font-family: 'Noto Sans TC', sans-serif;
             background-color: #f0f2f5; 
             color: #333; 
             display: flex; 
@@ -165,8 +165,8 @@
             margin-top: 15px;
         }
         .social-links a {
-            width: 40px;
-            height: 40px;
+            width: 50px;
+            height: 50px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -174,7 +174,11 @@
             color: white;
             font-size: 1.2em;
             text-decoration: none;
-            transition: background-color 0.3s ease;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+        .social-links a:hover {
+            transform: scale(1.1);
         }
         .social-links .youtube { background-color: #FF0000; }
         .social-links .instagram { background-color: #C13584; }
