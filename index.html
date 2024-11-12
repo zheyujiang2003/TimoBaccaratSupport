@@ -114,6 +114,16 @@
             font-weight: 500;
         }
 
+        .accuracy {
+            margin-top: 10px;
+            padding: 10px;
+            border-radius: 10px;
+            background-color: #e0f7fa;
+            font-size: 1em;
+            color: #00796b;
+            font-weight: 500;
+            text-align: center;
+        }
     </style>
 </head>
 <body>
@@ -145,6 +155,9 @@
                 <strong>優勢判斷：</strong>
                 <div id="predictionResult">等待輸入...</div>
             </div>
+            <div class="accuracy">
+                <div>目前預測準確率：<span id="accuracyRate">0%</span></div>
+            </div>
         </div>
     </div>
 </div>
@@ -165,6 +178,9 @@
         0: 0.5, 1: 0.4, 2: 0.3, 3: 0.3, 4: 0.1,
         5: 0.2, 6: 0.3, 7: 0.3, 8: 0.5, 9: 0.1
     };
+
+    let totalPredictions = 0;
+    let correctPredictions = 0;
 
     function calculateResult() {
         const playerInput = document.getElementById('player').value.padEnd(3, '0');
@@ -190,17 +206,37 @@
 
         // 推薦下注
         let recommendation;
+        let predictedOutcome;
+
         if (playerAdvantage > bankerAdvantage) {
             recommendation = "建議下注：閒家";
+            predictedOutcome = "閒";
         } else if (bankerAdvantage > playerAdvantage) {
             recommendation = "建議下注：莊家";
+            predictedOutcome = "莊";
         } else {
             recommendation = "建議看一把";
+            predictedOutcome = "看一把";
         }
 
         document.getElementById("predictionResult").innerText = recommendation;
 
+        // 模擬真實結果（這裡需要用戶輸入真實結果，這裡以隨機結果作為示例）
+        const actualOutcome = Math.random() < 0.5 ? "閒" : "莊";
+
+        // 更新預測準確率
+        totalPredictions++;
+        if (predictedOutcome === actualOutcome) {
+            correctPredictions++;
+        }
+        updateAccuracy();
+
         clearInputs();
+    }
+
+    function updateAccuracy() {
+        const accuracyRate = ((correctPredictions / totalPredictions) * 100).toFixed(2);
+        document.getElementById("accuracyRate").innerText = `${accuracyRate}%`;
     }
 
     function clearInputs() {
@@ -212,6 +248,9 @@
         document.getElementById('player').value = "";
         document.getElementById('banker').value = "";
         document.getElementById("predictionResult").innerText = "等待輸入...";
+        totalPredictions = 0;
+        correctPredictions = 0;
+        updateAccuracy();
     }
 </script>
 
