@@ -71,16 +71,16 @@
             .social-links.mobile {
                 display: none;
             }
-            /* 新增虎翼團隊文字樣式 */
+            /* 橫屏模式下的虎翼團隊文字樣式 */
             .team-info {
                 text-align: center;
-                font-size: 1.5em; /* 放大字體 */
+                font-size: 1.8em; /* 放大字體 */
                 color: #555;
-                margin-top: 20px; /* 往下移 */
+                margin-top: 30px; /* 往下移 */
             }
         }
 
-        /* 垂直模式下不顯示輸入區內的社交按鈕 */
+        /* 垂直模式下的團隊訊息位置調整 */
         @media (max-width: 767px), (orientation: portrait) {
             .social-links.desktop {
                 display: none;
@@ -90,6 +90,14 @@
                 gap: 15px;
                 justify-content: center;
                 margin-top: 15px;
+            }
+            /* 直屏時團隊訊息移動到兩個功能塊中間 */
+            .team-info {
+                text-align: center;
+                font-size: 1.3em; /* 調整字體大小 */
+                color: #555;
+                margin-top: 20px;
+                order: 2; /* 移動到兩個功能塊中間 */
             }
         }
 
@@ -261,10 +269,10 @@
             <a href="https://www.instagram.com/gamble_couple666/profilecard/?igsh=OGt1ZGJndHNiMTB4" target="_blank" class="instagram"></a>
             <a href="https://lin.ee/ivW2LRm" target="_blank" class="line"></a>
         </div>
-
-        <!-- 新增的團隊信息 -->
-        <div class="team-info">🪽虎翼團隊-賭狗情侶🪽</div>
     </div>
+
+    <!-- 新增的團隊信息 -->
+    <div class="team-info">🪽虎翼團隊-賭狗情侶🪽</div>
 
     <div class="panel">
         <h2>公式選擇</h2>
