@@ -4,11 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Timo百家輔助</title>
-    <link href="https://fonts.googleapis.com/css2?family=Hanalei+Fill&display=swap" rel="stylesheet">
     <style>
+        /* 引用手寫字體 */
+        @font-face {
+            font-family: '華康浪漫雪W9';
+            src: url('path_to_your_font/HuaKangLangManXueW9.ttf') format('truetype'); /* 替換為字體的真實路徑 */
+        }
+
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { 
-            font-family: 'Hanalei Fill', sans-serif;
+            font-family: '華康浪漫雪W9', sans-serif;
             background-color: #f8f9fa; 
             color: #333; 
             display: flex; 
@@ -36,6 +41,18 @@
             padding: 25px;
             overflow: hidden;
             align-items: center;
+        }
+
+        /* 調整為左右佈局 */
+        @media (min-width: 768px) {
+            .container {
+                flex-direction: row;
+                justify-content: space-between;
+                max-width: 1200px;
+            }
+            .panel {
+                width: 48%;
+            }
         }
 
         .panel {
