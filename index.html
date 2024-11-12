@@ -153,6 +153,16 @@
             border: 1px solid #ddd;
         }
 
+        .grid-item.zhuang {
+            background-color: #ff4c4c;
+            color: white;
+        }
+
+        .grid-item.xian {
+            background-color: #4c8cff;
+            color: white;
+        }
+
         .social-links {
             display: flex;
             gap: 15px;
@@ -174,7 +184,7 @@
             transform: scale(1.1);
         }
 
-        .social-links .youtube { background-image: url('https://upload.wikimedia.org/wikipedia/commons/4/42/YouTube_icon_%282013-2017%29.png'); }
+        .social-links .youtube { background-image: url('https://upload.wikimedia.org/wikipedia/commons/b/b8/YouTube_Logo_2017.png'); background-position: center; }
         .social-links .instagram { background-image: url('https://upload.wikimedia.org/wikipedia/commons/a/a5/Instagram_icon.png'); }
         .social-links .line { background-image: url('https://upload.wikimedia.org/wikipedia/commons/4/41/LINE_logo.svg'); }
     </style>
@@ -311,8 +321,28 @@
         const historyDisplay = document.getElementById("historyDisplay");
         const items = historyDisplay.querySelectorAll(".grid-item");
 
-        items.forEach((item, index) => {
-            item.innerText = history[index] ? history[index] : "";
+        // 清空展示區
+        items.forEach(item => {
+            item.classList.remove('zhuang', 'xian');
+            item.innerText = '';
+        });
+
+        // 根據「先直再橫」的順序填充
+        history.forEach((outcome, index) => {
+            const row = index % 6;
+            const col = Math.floor(index / 6);
+            const targetIndex = row * 6 + col; // 「先直再橫」計算方式
+            const targetItem = items[targetIndex];
+            
+            if (outcome === '莊') {
+                targetItem.classList.add('zhuang');
+                targetItem.innerText = '莊';
+            } else if (outcome === '閒') {
+                targetItem.classList.add('xian');
+                targetItem.innerText = '閒';
+            } else {
+                targetItem.innerText = '和';
+            }
         });
 
         if (history.length > 36) {
