@@ -40,6 +40,7 @@
     <button class="history-button xian" onclick="addHistory('閒')">閒</button>
     <button class="history-button he" onclick="addHistory('和')">和</button>
     <button class="history-button reset" onclick="resetHistory()">重置</button>
+    <button class="history-button reset" onclick="removeLastEntry()">刪除上一局</button>
 </div>
 
 <script>
@@ -127,6 +128,18 @@
         history = [];
         updateGrid();
         document.getElementById('predictionResult').innerText = "已重置歷史結果，請重新輸入...";
+    }
+
+    function removeLastEntry() {
+        if (history.length > 0) {
+            history.pop(); // 刪除最後一個記錄
+            updateGrid();
+            if (history.length >= 10) {
+                updatePrediction();
+            } else {
+                document.getElementById('predictionResult').innerText = `已輸入 ${history.length} 局，至少輸入 10 局後開始預測。`;
+            }
+        }
     }
 
     initializeGrid();
