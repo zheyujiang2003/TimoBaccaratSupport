@@ -4,22 +4,95 @@
     <meta charset="viewport" content="width=device-width, initial-scale=1.0">
     <title>Timo百家輔助</title>
     <style>
-        * { box-sizing: border-box; }
-        body { font-family: Arial, sans-serif; display: flex; flex-direction: column; align-items: center; padding: 20px; margin: 0; }
-        h1 { font-size: 1.5em; text-align: center; }
-        .container { display: flex; flex-direction: column; gap: 20px; width: 100%; max-width: 600px; }
-        .prediction { padding: 20px; border: 1px solid #ddd; border-radius: 10px; width: 100%; }
-        .history-container { display: flex; justify-content: space-around; width: 100%; margin-top: 20px; }
-        .history-button { flex: 1; padding: 15px 10px; margin: 5px; cursor: pointer; border: none; color: white; font-size: 16px; border-radius: 5px; }
-        .history-button.zhuang { background-color: red; }
-        .history-button.xian { background-color: blue; }
-        .history-button.he { background-color: green; }
-        .history-button.reset { background-color: gray; }
-        .history-display { display: grid; grid-template-columns: repeat(6, 1fr); gap: 5px; padding: 10px; border: 1px solid #ddd; border-radius: 10px; background-color: #f9f9f9; width: fit-content; margin-top: 10px; }
-        .result-circle { display: flex; justify-content: center; align-items: center; width: 40px; height: 40px; border-radius: 50%; color: white; font-weight: bold; font-size: 1em; background-color: #e0e0e0; }
-        .result-circle.zhuang { background-color: red; }
-        .result-circle.xian { background-color: blue; }
-        .result-circle.he { background-color: green; }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: Arial, sans-serif; background-color: #f4f4f9; display: flex; flex-direction: column; align-items: center; padding: 20px; color: #333; }
+        h1 { font-size: 2em; margin-bottom: 20px; color: #333; text-shadow: 1px 1px 4px rgba(0,0,0,0.1); }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            width: 100%;
+            max-width: 500px;
+            border-radius: 12px;
+            background: #fff;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+        }
+
+        .prediction {
+            text-align: center;
+            padding: 20px;
+            border-radius: 10px;
+            background: #fdfdfd;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+        }
+        
+        .prediction h2 { font-size: 1.4em; color: #555; margin-bottom: 10px; }
+
+        .result {
+            font-size: 1.2em;
+            color: #333;
+            font-weight: bold;
+            padding: 10px 0;
+            border-top: 1px solid #eee;
+            border-bottom: 1px solid #eee;
+        }
+
+        .history-container {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .history-button {
+            flex: 1;
+            padding: 15px 0;
+            cursor: pointer;
+            border: none;
+            color: white;
+            font-size: 1em;
+            border-radius: 8px;
+            transition: background 0.2s ease;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+        }
+
+        .history-button.zhuang { background-color: #e74c3c; }
+        .history-button.xian { background-color: #3498db; }
+        .history-button.he { background-color: #2ecc71; }
+        .history-button.reset { background-color: #7f8c8d; }
+        .history-button:hover { opacity: 0.9; }
+
+        .history-display {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 5px;
+            padding: 10px;
+            border-radius: 10px;
+            background-color: #fafafa;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+            margin-top: 15px;
+        }
+
+        .result-circle {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            color: white;
+            font-weight: bold;
+            font-size: 1em;
+            background-color: #e0e0e0;
+            transition: transform 0.2s ease;
+        }
+        
+        .result-circle.zhuang { background-color: #e74c3c; }
+        .result-circle.xian { background-color: #3498db; }
+        .result-circle.he { background-color: #2ecc71; }
+        .result-circle:hover { transform: scale(1.1); }
     </style>
 </head>
 <body>
@@ -39,8 +112,8 @@
     <button class="history-button zhuang" onclick="addHistory('莊')">莊</button>
     <button class="history-button xian" onclick="addHistory('閒')">閒</button>
     <button class="history-button he" onclick="addHistory('和')">和</button>
-    <button class="history-button reset" onclick="resetHistory()">重置</button>
     <button class="history-button reset" onclick="removeLastEntry()">刪除上一局</button>
+    <button class="history-button reset" onclick="resetHistory()">重置</button>
 </div>
 
 <script>
@@ -95,7 +168,6 @@
         let xianCount = history.filter(item => item === '閒').length;
 
         let recommendation = "";
-        let winProbability = 0;
 
         // 使用最近趨勢和統計進行預測
         if (history.length >= 5) {
@@ -106,22 +178,17 @@
             // 根據最近趨勢選擇推薦
             if (recentZhuangCount > recentXianCount) {
                 recommendation = "莊";
-                winProbability = ((zhuangCount / history.length) * 100).toFixed(2);
             } else if (recentXianCount > recentZhuangCount) {
                 recommendation = "閒";
-                winProbability = ((xianCount / history.length) * 100).toFixed(2);
             }
         }
 
-        // 只有當勝率高於 60% 時才推薦下注
-        if (parseFloat(winProbability) < minWinProbability || recommendation === "") {
+        // 如果無法確定推薦或勝率低於要求，則顯示「建議看一把」
+        if (recommendation === "") {
             recommendation = "建議看一把";
-            winProbability = "低於60%";
         }
 
-        document.getElementById('predictionResult').innerText = 
-            `預測結果：${recommendation}\n` +
-            `預估勝率：${winProbability}%`;
+        document.getElementById('predictionResult').innerText = `預測結果：${recommendation}`;
     }
 
     function resetHistory() {
