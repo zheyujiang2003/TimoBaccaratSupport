@@ -4,16 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Timo百家輔助</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@900&display=swap" rel="stylesheet">
     <style>
-        /* 引用手寫字體 */
-        @font-face {
-            font-family: '華康浪漫雪W9';
-            src: url('path_to_your_font/HuaKangLangManXueW9.ttf') format('truetype'); /* 替換為字體的真實路徑 */
-        }
-
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { 
-            font-family: '華康浪漫雪W9', sans-serif;
+            font-family: 'Noto Sans TC', sans-serif;
             background-color: #f8f9fa; 
             color: #333; 
             display: flex; 
@@ -26,7 +21,7 @@
             margin-bottom: 20px; 
             color: #333; 
             text-align: center;
-            font-weight: 700;
+            font-weight: 900;
         }
         
         .container {
@@ -43,8 +38,8 @@
             align-items: center;
         }
 
-        /* 調整為左右佈局 */
-        @media (min-width: 768px) {
+        /* 自適應左右佈局 */
+        @media (min-width: 768px) and (orientation: landscape) {
             .container {
                 flex-direction: row;
                 justify-content: space-between;
@@ -164,25 +159,24 @@
             justify-content: center;
             margin-top: 15px;
         }
+
         .social-links a {
             width: 50px;
             height: 50px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            display: inline-block;
+            background-size: cover;
             border-radius: 50%;
-            color: white;
-            font-size: 1.2em;
-            text-decoration: none;
-            transition: background-color 0.3s ease, transform 0.3s ease;
+            transition: transform 0.3s ease;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
         }
+
         .social-links a:hover {
             transform: scale(1.1);
         }
-        .social-links .youtube { background-color: #FF0000; }
-        .social-links .instagram { background-color: #C13584; }
-        .social-links .line { background-color: #00B900; }
+
+        .social-links .youtube { background-image: url('https://upload.wikimedia.org/wikipedia/commons/4/42/YouTube_icon_%282013-2017%29.png'); }
+        .social-links .instagram { background-image: url('https://upload.wikimedia.org/wikipedia/commons/a/a5/Instagram_icon.png'); }
+        .social-links .line { background-image: url('https://upload.wikimedia.org/wikipedia/commons/4/41/LINE_logo.svg'); }
     </style>
 </head>
 <body>
@@ -230,9 +224,9 @@
     </div>
 
     <div class="social-links">
-        <a href="https://youtube.com/channel/UCj1P2Tt82JtrbhVXui8DXcg?si=V9NidILTpYH3dTZx" target="_blank" class="youtube">YT</a>
-        <a href="https://www.instagram.com/gamble_couple666/profilecard/?igsh=OGt1ZGJndHNiMTB4" target="_blank" class="instagram">IG</a>
-        <a href="https://lin.ee/ivW2LRm" target="_blank" class="line">LINE</a>
+        <a href="https://youtube.com/channel/UCj1P2Tt82JtrbhVXui8DXcg?si=V9NidILTpYH3dTZx" target="_blank" class="youtube"></a>
+        <a href="https://www.instagram.com/gamble_couple666/profilecard/?igsh=OGt1ZGJndHNiMTB4" target="_blank" class="instagram"></a>
+        <a href="https://lin.ee/ivW2LRm" target="_blank" class="line"></a>
     </div>
 </div>
 
