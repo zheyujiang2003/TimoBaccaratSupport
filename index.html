@@ -1,70 +1,86 @@
 <!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
-    <meta charset="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Timo百家輔助</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>百家樂計算器</title>
     <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; }
+        * { box-sizing: border-box; }
         body { font-family: Arial, sans-serif; background-color: #f4f4f9; display: flex; flex-direction: column; align-items: center; padding: 20px; color: #333; }
         h1 { font-size: 2em; margin-bottom: 20px; color: #333; text-shadow: 1px 1px 4px rgba(0,0,0,0.1); }
-
+        
         .container {
             display: flex;
-            flex-direction: column;
             gap: 20px;
             width: 100%;
-            max-width: 500px;
-            border-radius: 12px;
+            max-width: 800px;
             background: #fff;
+            border-radius: 12px;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
             padding: 20px;
         }
 
-        .prediction {
-            text-align: center;
-            padding: 20px;
-            border-radius: 10px;
-            background: #fdfdfd;
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
-        }
-        
-        .prediction h2 { font-size: 1.4em; color: #555; margin-bottom: 10px; }
-
-        .result {
-            font-size: 1.2em;
-            color: #333;
-            font-weight: bold;
-            padding: 10px 0;
-            border-top: 1px solid #eee;
-            border-bottom: 1px solid #eee;
-        }
-
-        .history-container {
-            display: flex;
-            justify-content: space-between;
-            gap: 10px;
-            margin-top: 20px;
-        }
-
-        .history-button {
+        .left-panel, .right-panel {
             flex: 1;
-            padding: 15px 0;
-            cursor: pointer;
-            border: none;
-            color: white;
-            font-size: 1em;
-            border-radius: 8px;
-            transition: background 0.2s ease;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.15);
         }
 
-        .history-button.zhuang { background-color: #e74c3c; }
-        .history-button.xian { background-color: #3498db; }
-        .history-button.he { background-color: #2ecc71; }
-        .history-button.reset { background-color: #7f8c8d; }
-        .history-button:hover { opacity: 0.9; }
+        .left-panel h2, .right-panel h2 {
+            font-size: 1.4em;
+            color: #555;
+            margin-bottom: 10px;
+        }
 
-        .history-display {
+        .input-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            font-size: 1em;
+            color: #555;
+        }
+
+        input[type="number"] {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            font-size: 1em;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            font-size: 1em;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.2s ease;
+            margin-top: 10px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+        }
+
+        .calculate-btn { background-color: #3498db; }
+        .clear-btn { background-color: #e74c3c; }
+
+        .expectation, .prediction-result {
+            margin-top: 15px;
+            padding: 10px;
+            border-radius: 8px;
+            background-color: #f9f9f9;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+            font-size: 1.1em;
+            color: #333;
+        }
+
+        .right-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .history-display, .result-display {
             display: grid;
             grid-template-columns: repeat(6, 1fr);
             gap: 5px;
@@ -72,7 +88,6 @@
             border-radius: 10px;
             background-color: #fafafa;
             box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
-            margin-top: 15px;
         }
 
         .result-circle {
@@ -86,130 +101,145 @@
             font-weight: bold;
             font-size: 1em;
             background-color: #e0e0e0;
-            transition: transform 0.2s ease;
         }
-        
+
         .result-circle.zhuang { background-color: #e74c3c; }
         .result-circle.xian { background-color: #3498db; }
         .result-circle.he { background-color: #2ecc71; }
-        .result-circle:hover { transform: scale(1.1); }
     </style>
 </head>
 <body>
 
-<h1>Timo百家輔助</h1>
+<h1>百家樂計算器</h1>
 
 <div class="container">
-    <div class="prediction">
-        <h2>預測結果</h2>
-        <div id="predictionResult" class="result">請輸入歷史結果...</div>
-        <div class="history-display" id="historyDisplay">
+    <div class="left-panel">
+        <h2>輸入區</h2>
+        
+        <div class="input-group">
+            <label for="player1">閒的第一張牌：</label>
+            <input type="number" id="player1" min="0" max="9">
         </div>
+
+        <div class="input-group">
+            <label for="player2">閒的第二張牌：</label>
+            <input type="number" id="player2" min="0" max="9">
+        </div>
+
+        <div class="input-group">
+            <label for="player3">閒的第三張牌（無補牌輸入0）：</label>
+            <input type="number" id="player3" min="0" max="9">
+        </div>
+
+        <div class="input-group">
+            <label for="banker1">莊的第一張牌：</label>
+            <input type="number" id="banker1" min="0" max="9">
+        </div>
+
+        <div class="input-group">
+            <label for="banker2">莊的第二張牌：</label>
+            <input type="number" id="banker2" min="0" max="9">
+        </div>
+
+        <div class="input-group">
+            <label for="banker3">莊的第三張牌（無補牌輸入0）：</label>
+            <input type="number" id="banker3" min="0" max="9">
+        </div>
+
+        <button class="calculate-btn" onclick="calculateResult()">計算結果</button>
+        <button class="clear-btn" onclick="clearAll()">消除全部</button>
+
+        <div class="expectation">
+            <strong>莊閒和期望值：</strong>
+            <div>莊：50%</div>
+            <div>閒：50%</div>
+            <div id="predictionResult">預測結果：等待輸入...</div>
+        </div>
+    </div>
+
+    <div class="right-panel">
+        <h2>開牌結果紀錄區</h2>
+        <div class="history-display" id="historyDisplay"></div>
+
+        <h2>勝負結果紀錄區</h2>
+        <div class="result-display" id="resultDisplay"></div>
     </div>
 </div>
 
-<div class="history-container">
-    <button class="history-button zhuang" onclick="addHistory('莊')">莊</button>
-    <button class="history-button xian" onclick="addHistory('閒')">閒</button>
-    <button class="history-button he" onclick="addHistory('和')">和</button>
-    <button class="history-button reset" onclick="removeLastEntry()">刪除上一局</button>
-    <button class="history-button reset" onclick="resetHistory()">重置</button>
-</div>
-
 <script>
-    const maxRows = 6;
-    const maxCols = 6;
-    const minWinProbability = 60; // 設定最低推薦下注的勝率
-    let history = [];
+    const history = [];
+    const results = [];
     const historyDisplay = document.getElementById('historyDisplay');
+    const resultDisplay = document.getElementById('resultDisplay');
 
-    function initializeGrid() {
-        for (let i = 0; i < maxRows * maxCols; i++) {
-            const circle = document.createElement('div');
-            circle.className = 'result-circle';
-            circle.setAttribute('data-index', i);
-            historyDisplay.appendChild(circle);
-        }
-    }
+    function calculateResult() {
+        const player1 = parseInt(document.getElementById('player1').value) || 0;
+        const player2 = parseInt(document.getElementById('player2').value) || 0;
+        const player3 = parseInt(document.getElementById('player3').value) || 0;
+        const banker1 = parseInt(document.getElementById('banker1').value) || 0;
+        const banker2 = parseInt(document.getElementById('banker2').value) || 0;
+        const banker3 = parseInt(document.getElementById('banker3').value) || 0;
 
-    function addHistory(result) {
-        if (history.length >= maxRows * maxCols) return;
-        history.push(result);
-        updateGrid();
-        if (history.length >= 10) {
-            updatePrediction();
+        const playerTotal = (player1 + player2 + player3) % 10;
+        const bankerTotal = (banker1 + banker2 + banker3) % 10;
+
+        let result;
+        if (playerTotal > bankerTotal) {
+            result = "閒";
+            results.push("閒");
+        } else if (bankerTotal > playerTotal) {
+            result = "莊";
+            results.push("莊");
         } else {
-            document.getElementById('predictionResult').innerText = `已輸入 ${history.length} 局，至少輸入 10 局後開始預測。`;
+            result = "和";
+            results.push("和");
         }
+
+        history.push({ playerTotal, bankerTotal });
+        updateHistoryDisplay();
+        updateResultDisplay();
+        updatePrediction();
     }
 
-    function updateGrid() {
-        const cells = document.querySelectorAll('.result-circle');
-        cells.forEach(cell => {
-            cell.className = 'result-circle';
-            cell.innerText = '';
-        });
-
-        history.forEach((result, index) => {
-            const cell = cells[getVerticalIndex(index)];
-            cell.classList.add(result === '莊' ? 'zhuang' : result === '閒' ? 'xian' : 'he');
-            cell.innerText = result;
+    function updateHistoryDisplay() {
+        historyDisplay.innerHTML = "";
+        history.forEach(item => {
+            const resultCircle = document.createElement("div");
+            resultCircle.className = "result-circle " + (item.playerTotal > item.bankerTotal ? "xian" : item.playerTotal < item.bankerTotal ? "zhuang" : "he");
+            resultCircle.innerText = item.playerTotal > item.bankerTotal ? "閒" : item.playerTotal < item.bankerTotal ? "莊" : "和";
+            historyDisplay.appendChild(resultCircle);
         });
     }
 
-    function getVerticalIndex(index) {
-        const col = Math.floor(index / maxRows);
-        const row = index % maxRows;
-        return row * maxCols + col;
+    function updateResultDisplay() {
+        resultDisplay.innerHTML = "";
+        results.forEach(result => {
+            const resultCircle = document.createElement("div");
+            resultCircle.className = "result-circle " + (result === "閒" ? "xian" : result === "莊" ? "zhuang" : "he");
+            resultCircle.innerText = result;
+            resultDisplay.appendChild(resultCircle);
+        });
     }
 
     function updatePrediction() {
-        let zhuangCount = history.filter(item => item === '莊').length;
-        let xianCount = history.filter(item => item === '閒').length;
+        if (results.length >= 5) {
+            const recentResults = results.slice(-5);
+            const xianCount = recentResults.filter(r => r === "閒").length;
+            const zhuangCount = recentResults.filter(r => r === "莊").length;
 
-        let recommendation = "";
-
-        // 使用最近趨勢和統計進行預測
-        if (history.length >= 5) {
-            const recentHistory = history.slice(-5); // 分析最近的5次記錄
-            const recentZhuangCount = recentHistory.filter(item => item === '莊').length;
-            const recentXianCount = recentHistory.filter(item => item === '閒').length;
-
-            // 根據最近趨勢選擇推薦
-            if (recentZhuangCount > recentXianCount) {
-                recommendation = "莊";
-            } else if (recentXianCount > recentZhuangCount) {
-                recommendation = "閒";
-            }
-        }
-
-        // 如果無法確定推薦或勝率低於要求，則顯示「建議看一把」
-        if (recommendation === "") {
-            recommendation = "建議看一把";
-        }
-
-        document.getElementById('predictionResult').innerText = `預測結果：${recommendation}`;
-    }
-
-    function resetHistory() {
-        history = [];
-        updateGrid();
-        document.getElementById('predictionResult').innerText = "已重置歷史結果，請重新輸入...";
-    }
-
-    function removeLastEntry() {
-        if (history.length > 0) {
-            history.pop(); // 刪除最後一個記錄
-            updateGrid();
-            if (history.length >= 10) {
-                updatePrediction();
-            } else {
-                document.getElementById('predictionResult').innerText = `已輸入 ${history.length} 局，至少輸入 10 局後開始預測。`;
-            }
+            const prediction = xianCount > zhuangCount ? "預測結果：閒" : zhuangCount > xianCount ? "預測結果：莊" : "預測結果：無法預測";
+            document.getElementById("predictionResult").innerText = prediction;
         }
     }
 
-    initializeGrid();
+    function clearAll() {
+        document.querySelectorAll("input[type='number']").forEach(input => input.value = "");
+        history.length = 0;
+        results.length = 0;
+        updateHistoryDisplay();
+        updateResultDisplay();
+        document.getElementById("predictionResult").innerText = "預測結果：等待輸入...";
+    }
 </script>
 
 </body>
