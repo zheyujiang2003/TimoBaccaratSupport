@@ -191,6 +191,12 @@
         const playerInput = document.getElementById('player').value.padEnd(3, '0');
         const bankerInput = document.getElementById('banker').value.padEnd(3, '0');
 
+        // 確保輸入的值都是數字
+        if (isNaN(playerInput) || isNaN(bankerInput) || playerInput.length !== 3 || bankerInput.length !== 3) {
+            alert("請確保輸入的牌點數為三位數字，無補牌時請輸入0。");
+            return;
+        }
+
         const player1 = parseInt(playerInput[0]);
         const player2 = parseInt(playerInput[1]);
         const player3 = parseInt(playerInput[2]);
@@ -248,4 +254,27 @@
         });
     }
 
-   
+    function updatePrediction() {
+        if (results.length >= 5) {
+            const recentResults = results.slice(-5);
+            const xianCount = recentResults.filter(r => r === "閒").length;
+            const zhuangCount = recentResults.filter(r => r === "莊").length;
+
+            const prediction = xianCount > zhuangCount ? "預測結果：閒" : zhuangCount > xianCount ? "預測結果：莊" : "預測結果：無法預測";
+            document.getElementById("predictionResult").innerText = prediction;
+        }
+    }
+
+    function clearAll() {
+        document.getElementById('player').value = "";
+        document.getElementById('banker').value = "";
+        history.length = 0;
+        results.length = 0;
+        updateHistoryDisplay();
+        updateResultDisplay();
+        document.getElementById("predictionResult").innerText = "預測結果：等待輸入...";
+    }
+</script>
+
+</body>
+</html>
