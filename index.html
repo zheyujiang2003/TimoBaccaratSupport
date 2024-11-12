@@ -36,6 +36,7 @@
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
             padding: 20px;
             overflow: hidden;
+            align-items: center;
         }
 
         .row {
@@ -200,16 +201,21 @@
                 <div>目前預測準確率：<span id="accuracyRate">0%</span></div>
             </div>
             <div class="grid-container" id="historyDisplay">
-                <!-- 6x6 格子的歷史開牌區 -->
+                <!-- 6x6 格子的歷史開牌區，預先顯示空格 -->
+                <script>
+                    for (let i = 0; i < 36; i++) {
+                        document.write('<div class="small-circle"></div>');
+                    }
+                </script>
             </div>
         </div>
     </div>
-</div>
 
-<div class="social-links">
-    <a href="https://youtube.com/channel/UCj1P2Tt82JtrbhVXui8DXcg?si=V9NidILTpYH3dTZx" target="_blank" class="youtube">YT</a>
-    <a href="https://www.instagram.com/gamble_couple666/profilecard/?igsh=OGt1ZGJndHNiMTB4" target="_blank" class="instagram">IG</a>
-    <a href="https://lin.ee/ivW2LRm" target="_blank" class="line">LINE</a>
+    <div class="social-links">
+        <a href="https://youtube.com/channel/UCj1P2Tt82JtrbhVXui8DXcg?si=V9NidILTpYH3dTZx" target="_blank" class="youtube">YT</a>
+        <a href="https://www.instagram.com/gamble_couple666/profilecard/?igsh=OGt1ZGJndHNiMTB4" target="_blank" class="instagram">IG</a>
+        <a href="https://lin.ee/ivW2LRm" target="_blank" class="line">LINE</a>
+    </div>
 </div>
 
 <script>
@@ -282,7 +288,7 @@
             predictedOutcome = "莊";
         } else {
             recommendation = "建議看一把";
-            predictedOutcome = "和";
+            predictedOutcome = "看一把";
         }
 
         document.getElementById("predictionResult").innerText = recommendation;
@@ -293,7 +299,7 @@
         updateHistoryDisplay();
 
         // 檢查預測準確率（從第二局開始比較）
-        if (history.length > 1 && actualOutcome !== "和") {
+        if (history.length > 1 && actualOutcome !== "和" && predictedOutcome !== "看一把") {
             totalPredictions++;
             if (predictions[history.length - 2] === actualOutcome) {
                 correctPredictions++;
@@ -311,12 +317,11 @@
 
     function updateHistoryDisplay() {
         const historyDisplay = document.getElementById("historyDisplay");
-        historyDisplay.innerHTML = ""; // 清空歷史顯示區
-        history.forEach((outcome, index) => {
-            const circle = document.createElement("div");
+        const circles = historyDisplay.querySelectorAll(".small-circle");
+        circles.forEach((circle, index) => {
+            const outcome = history[index];
             circle.className = "small-circle " + (outcome === "莊" ? "zhuang" : outcome === "閒" ? "xian" : "he");
-            circle.innerText = outcome;
-            historyDisplay.appendChild(circle);
+            circle.innerText = outcome ? outcome : "";
         });
     }
 
