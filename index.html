@@ -39,10 +39,9 @@
             color: #555;
         }
 
-        input[type="number"] {
+        input[type="text"] {
             width: 100%;
             padding: 8px;
-            margin-top: 5px;
             font-size: 1em;
             border: 1px solid #ccc;
             border-radius: 5px;
@@ -117,33 +116,13 @@
         <h2>輸入區</h2>
         
         <div class="input-group">
-            <label for="player1">閒的第一張牌：</label>
-            <input type="number" id="player1" min="0" max="9">
+            <label for="player">閒的三張牌（連續輸入三個數字，無補牌輸入0）：</label>
+            <input type="text" id="player" maxlength="3" placeholder="例如：789 或 780">
         </div>
 
         <div class="input-group">
-            <label for="player2">閒的第二張牌：</label>
-            <input type="number" id="player2" min="0" max="9">
-        </div>
-
-        <div class="input-group">
-            <label for="player3">閒的第三張牌（無補牌輸入0）：</label>
-            <input type="number" id="player3" min="0" max="9">
-        </div>
-
-        <div class="input-group">
-            <label for="banker1">莊的第一張牌：</label>
-            <input type="number" id="banker1" min="0" max="9">
-        </div>
-
-        <div class="input-group">
-            <label for="banker2">莊的第二張牌：</label>
-            <input type="number" id="banker2" min="0" max="9">
-        </div>
-
-        <div class="input-group">
-            <label for="banker3">莊的第三張牌（無補牌輸入0）：</label>
-            <input type="number" id="banker3" min="0" max="9">
+            <label for="banker">莊的三張牌（連續輸入三個數字，無補牌輸入0）：</label>
+            <input type="text" id="banker" maxlength="3" placeholder="例如：345 或 340">
         </div>
 
         <button class="calculate-btn" onclick="calculateResult()">計算結果</button>
@@ -173,12 +152,16 @@
     const resultDisplay = document.getElementById('resultDisplay');
 
     function calculateResult() {
-        const player1 = parseInt(document.getElementById('player1').value) || 0;
-        const player2 = parseInt(document.getElementById('player2').value) || 0;
-        const player3 = parseInt(document.getElementById('player3').value) || 0;
-        const banker1 = parseInt(document.getElementById('banker1').value) || 0;
-        const banker2 = parseInt(document.getElementById('banker2').value) || 0;
-        const banker3 = parseInt(document.getElementById('banker3').value) || 0;
+        const playerInput = document.getElementById('player').value.padEnd(3, '0');
+        const bankerInput = document.getElementById('banker').value.padEnd(3, '0');
+
+        const player1 = parseInt(playerInput[0]);
+        const player2 = parseInt(playerInput[1]);
+        const player3 = parseInt(playerInput[2]);
+
+        const banker1 = parseInt(bankerInput[0]);
+        const banker2 = parseInt(bankerInput[1]);
+        const banker3 = parseInt(bankerInput[2]);
 
         const playerTotal = (player1 + player2 + player3) % 10;
         const bankerTotal = (banker1 + banker2 + banker3) % 10;
@@ -199,13 +182,14 @@
         updateHistoryDisplay();
         updateResultDisplay();
         updatePrediction();
-        
+
         // 自動清除輸入框
         clearInputs();
     }
 
     function clearInputs() {
-        document.querySelectorAll("input[type='number']").forEach(input => input.value = "");
+        document.getElementById('player').value = "";
+        document.getElementById('banker').value = "";
     }
 
     function updateHistoryDisplay() {
@@ -240,7 +224,8 @@
     }
 
     function clearAll() {
-        document.querySelectorAll("input[type='number']").forEach(input => input.value = "");
+        document.getElementById('player').value = "";
+        document.getElementById('banker').value = "";
         history.length = 0;
         results.length = 0;
         updateHistoryDisplay();
