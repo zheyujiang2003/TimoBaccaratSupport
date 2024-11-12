@@ -4,10 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Timo百家輔助</title>
+    <link href="https://fonts.googleapis.com/css2?family=ZCOOL+KuaiLe&display=swap" rel="stylesheet">
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { 
-            font-family: 'Arial', sans-serif;
+            font-family: 'ZCOOL KuaiLe', sans-serif;
             background-color: #f0f2f5; 
             color: #333; 
             display: flex; 
@@ -101,6 +102,11 @@
         .clear-btn { background-color: #d9534f; }
         .clear-btn:hover { background-color: #c9302c; }
 
+        select {
+            background-color: #333333;
+            color: #ffffff;
+        }
+
         .expectation, .prediction-result, .accuracy {
             padding: 15px;
             border-radius: 10px;
@@ -111,6 +117,12 @@
             font-weight: 500;
             margin-top: 10px;
             text-align: center;
+        }
+
+        .prediction-result h2 {
+            font-size: 1.2em;
+            margin-bottom: 5px;
+            color: #333;
         }
 
         .accuracy {
@@ -199,8 +211,8 @@
                 <option value="ThreePoint">三點叉公式</option>
             </select>
 
-            <div class="expectation">
-                <strong>優勢判斷：</strong>
+            <div class="prediction-result">
+                <h2>AI說下</h2>
                 <div id="predictionResult">等待輸入...</div>
             </div>
             <div class="accuracy">
@@ -259,13 +271,18 @@
             recommendation = predictedOutcome === "看一把" ? "建議看一把" : `建議下注：${predictedOutcome}`;
             apPredictions.push(predictedOutcome);
         } else if (formula === "ThreePoint") {
-            if (history.length > 0 && actualOutcome !== "和") {
+            if (history.length > 0) {
                 const lastOutcome = history[history.length - 1];
                 const difference = Math.abs(playerPoints - bankerPoints);
-                predictedOutcome = difference <= 3 ? (lastOutcome === "莊" ? "閒" : "莊") : lastOutcome;
-                recommendation = lastOutcome === "和" ? "建議看一把" : `推薦下注：${predictedOutcome}`;
+                if (actualOutcome === "和") {
+                    recommendation = "建議看一把";
+                    predictedOutcome = "看一把";
+                } else {
+                    predictedOutcome = difference <= 3 ? (lastOutcome === "莊" ? "閒" : "莊") : lastOutcome;
+                    recommendation = lastOutcome === "和" ? "建議看一把" : `推薦下注：${predictedOutcome}`;
+                }
             } else {
-                recommendation = "等待輸入結果...";
+                recommendation = "建議看一把";
                 predictedOutcome = "看一把";
             }
             threePointPredictions.push(predictedOutcome);
@@ -280,7 +297,7 @@
             if (apPredictions[history.length - 2] === actualOutcome) {
                 correctPredictions++;
             }
-        } else if (formula === "ThreePoint" && history.length > 1 && predictedOutcome !== "看一把") {
+        } else if (formula === "ThreePoint" && history.length > 1 && predictedOutcome !== "看一把" && actualOutcome !== "和") {
             totalPredictions++;
             if (threePointPredictions[history.length - 2] === actualOutcome) {
                 correctPredictions++;
