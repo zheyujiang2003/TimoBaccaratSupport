@@ -4,26 +4,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Timo百家輔助</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        /* 引入字體 */
-        @font-face {
-            font-family: 'AR RomanMincho';
-            src: url('https://zheyujiang2003.github.io/Timo/AR_RomanMincho.woff2') format('woff2'),
-                 url('https://zheyujiang2003.github.io/Timo/AR_RomanMincho.woff') format('woff'),
-                 url('https://zheyujiang2003.github.io/Timo/AR_RomanMincho.ttf') format('truetype');
-            font-weight: normal;
-            font-style: normal;
-        }
-
-        /* 應用字體 */
+        /* 使用 Noto Serif TC 字體 */
         body {
-            font-family: 'AR RomanMincho', serif;
+            font-family: 'Noto Serif TC', serif;
             background-color: #f8f9fa;
             color: #333;
             display: flex;
             flex-direction: column;
             align-items: center;
             padding: 20px;
+            margin: 0;
         }
 
         h1 { 
@@ -31,7 +23,7 @@
             margin-bottom: 20px; 
             color: #333; 
             text-align: center;
-            font-weight: 900;
+            font-weight: 700;
         }
         
         .container {
@@ -48,8 +40,8 @@
             align-items: center;
         }
 
-        /* 自適應左右佈局 */
-        @media screen and (min-width: 768px) {
+        /* RWD 佈局設定：螢幕寬度超過 768px 時，功能塊左右排列 */
+        @media (min-width: 768px) {
             .container {
                 flex-direction: row;
                 align-items: flex-start;
