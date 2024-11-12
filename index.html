@@ -8,7 +8,7 @@
         body { font-family: Arial, sans-serif; display: flex; flex-direction: column; align-items: center; padding: 20px; margin: 0; }
         h1 { font-size: 1.5em; text-align: center; }
         .container { display: flex; flex-direction: column; gap: 20px; width: 100%; max-width: 600px; }
-        .settings, .prediction { padding: 20px; border: 1px solid #ddd; border-radius: 10px; width: 100%; }
+        .prediction { padding: 20px; border: 1px solid #ddd; border-radius: 10px; width: 100%; }
         .history-container { display: flex; justify-content: space-around; width: 100%; margin-top: 20px; }
         .history-button { flex: 1; padding: 15px 10px; margin: 5px; cursor: pointer; border: none; color: white; font-size: 16px; border-radius: 5px; }
         .history-button.zhuang { background-color: red; }
@@ -33,16 +33,6 @@
         <div class="history-display" id="historyDisplay">
         </div>
     </div>
-    <div class="settings">
-        <h2>設定</h2>
-        <label for="capital">本金:</label>
-        <select id="capital">
-            <option value="3000">3000</option>
-            <option value="5000">5000</option>
-            <option value="custom">自訂</option>
-        </select>
-        <input type="number" id="customCapital" placeholder="輸入本金" style="display:none;" />
-    </div>
 </div>
 
 <div class="history-container">
@@ -55,11 +45,8 @@
 <script>
     const maxRows = 6;
     const maxCols = 6;
-    const betMultipliers = [1, 3, 7, 15, 31]; // 天門公式注碼倍數
-    let history = [];
-    let previousRecommendation = '';
-    let currentMultiplierIndex = 0; // 追蹤當前倍數的索引
     const minWinProbability = 60; // 設定最低推薦下注的勝率
+    let history = [];
     const historyDisplay = document.getElementById('historyDisplay');
 
     function initializeGrid() {
@@ -76,7 +63,7 @@
         history.push(result);
         updateGrid();
         if (history.length >= 10) {
-            updatePrediction(result);
+            updatePrediction();
         } else {
             document.getElementById('predictionResult').innerText = `已輸入 ${history.length} 局，至少輸入 10 局後開始預測。`;
         }
@@ -102,55 +89,42 @@
         return row * maxCols + col;
     }
 
-    function updatePrediction(actualResult) {
+    function updatePrediction() {
         let zhuangCount = history.filter(item => item === '莊').length;
         let xianCount = history.filter(item => item === '閒').length;
 
-        let recommendation, winProbability;
+        let recommendation = "";
+        let winProbability = 0;
 
-        if (zhuangCount > xianCount) {
-            recommendation = "閒";
-            winProbability = ((xianCount / history.length) * 100).toFixed(2);
-        } else if (xianCount > zhuangCount) {
-            recommendation = "莊";
-            winProbability = ((zhuangCount / history.length) * 100).toFixed(2);
-        } else {
-            recommendation = "建議看一把";
-            winProbability = "50.00";
-            currentMultiplierIndex = 0; // 清零倍數索引
+        // 使用最近趨勢和統計進行預測
+        if (history.length >= 5) {
+            const recentHistory = history.slice(-5); // 分析最近的5次記錄
+            const recentZhuangCount = recentHistory.filter(item => item === '莊').length;
+            const recentXianCount = recentHistory.filter(item => item === '閒').length;
+
+            // 根據最近趨勢選擇推薦
+            if (recentZhuangCount > recentXianCount) {
+                recommendation = "莊";
+                winProbability = ((zhuangCount / history.length) * 100).toFixed(2);
+            } else if (recentXianCount > recentZhuangCount) {
+                recommendation = "閒";
+                winProbability = ((xianCount / history.length) * 100).toFixed(2);
+            }
         }
 
-        if (winProbability < minWinProbability) {
+        // 只有當勝率高於 60% 時才推薦下注
+        if (parseFloat(winProbability) < minWinProbability || recommendation === "") {
             recommendation = "建議看一把";
             winProbability = "低於60%";
         }
 
-        const capitalSelect = document.getElementById('capital').value;
-        let capital = capitalSelect === 'custom' ? parseInt(document.getElementById('customCapital').value) : parseInt(capitalSelect);
-
-        let betAmount = 0;
-        if (capital && recommendation !== "建議看一把") {
-            if (previousRecommendation && previousRecommendation !== actualResult) {
-                // 若預測錯誤，依照天門公式提升下注倍數
-                currentMultiplierIndex = Math.min(currentMultiplierIndex + 1, betMultipliers.length - 1);
-            } else {
-                // 預測成功或首次下注，重置為基礎倍數
-                currentMultiplierIndex = 0;
-            }
-            betAmount = capital * betMultipliers[currentMultiplierIndex];
-        }
-
-        previousRecommendation = recommendation;
         document.getElementById('predictionResult').innerText = 
             `預測結果：${recommendation}\n` +
-            `預估勝率：${winProbability}%\n` +
-            `建議下注金額：$${betAmount || "未設置本金"}`;
+            `預估勝率：${winProbability}%`;
     }
 
     function resetHistory() {
         history = [];
-        previousRecommendation = '';
-        currentMultiplierIndex = 0;
         updateGrid();
         document.getElementById('predictionResult').innerText = "已重置歷史結果，請重新輸入...";
     }
