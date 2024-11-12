@@ -37,7 +37,7 @@
             padding: 20px;
             overflow: hidden;
             align-items: center;
-            min-height: 1000px; /* 增加高度 */
+            min-height: 1000px;
         }
 
         .row {
@@ -209,7 +209,6 @@
                 <div>目前預測準確率：<span id="accuracyRate">0%</span></div>
             </div>
             <div class="grid-container" id="historyDisplay">
-                <!-- 6x6 格子的歷史開牌區，預先顯示空格 -->
                 <script>
                     for (let i = 0; i < 36; i++) {
                         document.write('<div class="small-circle"></div>');
@@ -227,28 +226,6 @@
 </div>
 
 <script>
-    // CP 計分表
-    function cardToCP(card) {
-        const cpMap = {
-            'A': -5, '2': -4, '3': -3, '4': -2,
-            '5': 1, '6': 2, '7': 3, '8': 0, '9': 5,
-            '10': 0, 'J': 0, 'Q': 0, 'K': 0
-        };
-        return cpMap[card.toUpperCase()] || 0;
-    }
-
-    // AP 權重表
-    const apMap = {
-        0: 0.5, 1: 0.4, 2: 0.3, 3: 0.3, 4: 0.1,
-        5: 0.2, 6: 0.3, 7: 0.3, 8: 0.5, 9: 0.1
-    };
-
-    let totalPredictions = 0;
-    let correctPredictions = 0;
-    const history = [];
-    const predictions = []; // 用於記錄每次的預測
-
-    // 檢查選擇的公式，並在選擇三點叉公式時顯示提示
     function checkFormula() {
         const formula = document.getElementById("formulaSelect").value;
         if (formula === "ThreePoint") {
@@ -256,57 +233,37 @@
         }
     }
 
+    let totalPredictions = 0;
+    let correctPredictions = 0;
+    const history = [];
+    const predictions = [];
+
     function calculateResult() {
         const playerInput = document.getElementById('player').value.padEnd(3, '0');
         const bankerInput = document.getElementById('banker').value.padEnd(3, '0');
         const formula = document.getElementById("formulaSelect").value;
 
-        // 確保輸入為合法的數字或字母
         if (!/^[0-9AJQK]+$/.test(playerInput) || !/^[0-9AJQK]+$/.test(bankerInput) || playerInput.length !== 3 || bankerInput.length !== 3) {
             alert("請確保輸入的牌點數為三位數字或字母（A、J、Q、K），無補牌時請輸入0。");
             return;
         }
 
-        // 計算莊閒的點數
         const playerPoints = (parseInt(playerInput[0]) + parseInt(playerInput[1]) + parseInt(playerInput[2])) % 10;
         const bankerPoints = (parseInt(bankerInput[0]) + parseInt(bankerInput[1]) + parseInt(bankerInput[2])) % 10;
-
+        let actualOutcome = playerPoints > bankerPoints ? "閒" : bankerPoints > playerPoints ? "莊" : "和";
         let predictedOutcome, recommendation;
 
         if (formula === "AP") {
-            // AP 權重公式
-            const playerCP = cardToCP(playerInput[0]) + cardToCP(playerInput[1]) + cardToCP(playerInput[2]);
-            const bankerCP = cardToCP(bankerInput[0]) + cardToCP(bankerInput[1]) + cardToCP(bankerInput[2]);
-
-            const playerAP = apMap[playerPoints] || 0.1;
-            const bankerAP = apMap[bankerPoints] || 0.1;
-
-            const playerAdvantage = playerCP * playerAP;
-            const bankerAdvantage = bankerCP * bankerAP;
-
-            if (playerAdvantage > bankerAdvantage) {
-                recommendation = "建議下注：閒家";
-                predictedOutcome = "閒";
-            } else if (bankerAdvantage > playerAdvantage) {
-                recommendation = "建議下注：莊家";
-                predictedOutcome = "莊";
-            } else {
-                recommendation = "建議看一把";
-                predictedOutcome = "看一把";
-            }
+            const playerAP = {0: 0.5, 1: 0.4, 2: 0.3, 3: 0.3, 4: 0.1, 5: 0.2, 6: 0.3, 7: 0.3, 8: 0.5, 9: 0.1}[playerPoints];
+            const bankerAP = {0: 0.5, 1: 0.4, 2: 0.3, 3: 0.3, 4: 0.1, 5: 0.2, 6: 0.3, 7: 0.3, 8: 0.5, 9: 0.1}[bankerPoints];
+            predictedOutcome = playerAP > bankerAP ? "閒" : bankerAP > playerAP ? "莊" : "看一把";
+            recommendation = predictedOutcome === "看一把" ? "建議看一把" : `建議下注：${predictedOutcome}`;
         } else if (formula === "ThreePoint") {
-            // 三點叉公式
-            if (history.length > 0) {
+            if (history.length > 0 && actualOutcome !== "和") {
                 const lastOutcome = history[history.length - 1];
                 const difference = Math.abs(playerPoints - bankerPoints);
-
-                if (difference <= 3) {
-                    recommendation = `推薦下注：${lastOutcome === "莊" ? "閒" : "莊"}`;
-                    predictedOutcome = lastOutcome === "莊" ? "閒" : "莊";
-                } else {
-                    recommendation = `推薦下注：${lastOutcome}`;
-                    predictedOutcome = lastOutcome;
-                }
+                predictedOutcome = difference <= 3 ? (lastOutcome === "莊" ? "閒" : "莊") : lastOutcome;
+                recommendation = lastOutcome === "和" ? "建議看一把" : `推薦下注：${predictedOutcome}`;
             } else {
                 recommendation = "等待輸入結果...";
                 predictedOutcome = "看一把";
@@ -314,21 +271,17 @@
         }
 
         document.getElementById("predictionResult").innerText = recommendation;
-        predictions.push(predictedOutcome); // 記錄每次預測
-
-        // 儲存結果到歷史記錄並展示
-        history.push(predictedOutcome === "看一把" ? "" : predictedOutcome);
+        predictions.push(predictedOutcome);
+        history.push(actualOutcome);
         updateHistoryDisplay();
 
-        // 檢查預測準確率（從第二局開始比較）
         if (history.length > 1 && predictedOutcome !== "看一把") {
             totalPredictions++;
-            if (predictions[history.length - 2] === history[history.length - 1]) {
+            if (predictions[history.length - 2] === actualOutcome) {
                 correctPredictions++;
             }
             updateAccuracy();
         }
-
         clearInputs();
     }
 
