@@ -228,6 +228,16 @@
         const playerPoints = (parseInt(playerInput[0]) + parseInt(playerInput[1]) + parseInt(playerInput[2])) % 10;
         const bankerPoints = (parseInt(bankerInput[0]) + parseInt(bankerInput[1]) + parseInt(bankerInput[2])) % 10;
 
+        // 判斷獲勝方
+        let actualOutcome;
+        if (playerPoints > bankerPoints) {
+            actualOutcome = "閒";
+        } else if (bankerPoints > playerPoints) {
+            actualOutcome = "莊";
+        } else {
+            actualOutcome = "和";
+        }
+
         // 計算 CP 值
         const playerCP = cardToCP(playerInput[0]) + cardToCP(playerInput[1]) + cardToCP(playerInput[2]);
         const bankerCP = cardToCP(bankerInput[0]) + cardToCP(bankerInput[1]) + cardToCP(bankerInput[2]);
@@ -257,9 +267,6 @@
 
         document.getElementById("predictionResult").innerText = recommendation;
 
-        // 模擬真實結果（這裡需要用戶輸入真實結果，這裡以隨機結果作為示例）
-        const actualOutcome = Math.random() < 0.5 ? "閒" : "莊";
-        
         // 儲存結果到歷史記錄並展示
         history.push(actualOutcome);
         updateHistoryDisplay();
