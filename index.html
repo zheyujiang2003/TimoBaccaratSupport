@@ -1,121 +1,25 @@
 <!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="viewport" content="width=device-width, initial-scale=1.0">
     <title>Timo百家輔助</title>
     <style>
-        * {
-            box-sizing: border-box;
-        }
-        body {
-            font-family: Arial, sans-serif;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 20px;
-            margin: 0;
-        }
-        h1 {
-            font-size: 1.5em;
-            text-align: center;
-        }
-        .container {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-            width: 100%;
-            max-width: 600px;
-        }
-        .settings, .prediction {
-            padding: 20px;
-            border: 1px solid #ddd;
-            border-radius: 10px;
-            width: 100%;
-        }
-        .settings h2, .prediction h2 {
-            margin-top: 0;
-        }
-        label {
-            display: block;
-            margin-top: 10px;
-            font-weight: bold;
-        }
-        select, input[type="number"] {
-            width: 100%;
-            padding: 8px;
-            margin-top: 5px;
-            font-size: 16px;
-        }
-        .history-container {
-            display: flex;
-            justify-content: space-around;
-            width: 100%;
-            margin-top: 20px;
-        }
-        .history-button {
-            flex: 1;
-            padding: 15px 10px;
-            margin: 5px;
-            cursor: pointer;
-            border: none;
-            color: white;
-            font-size: 16px;
-            border-radius: 5px;
-        }
+        * { box-sizing: border-box; }
+        body { font-family: Arial, sans-serif; display: flex; flex-direction: column; align-items: center; padding: 20px; margin: 0; }
+        h1 { font-size: 1.5em; text-align: center; }
+        .container { display: flex; flex-direction: column; gap: 20px; width: 100%; max-width: 600px; }
+        .settings, .prediction { padding: 20px; border: 1px solid #ddd; border-radius: 10px; width: 100%; }
+        .history-container { display: flex; justify-content: space-around; width: 100%; margin-top: 20px; }
+        .history-button { flex: 1; padding: 15px 10px; margin: 5px; cursor: pointer; border: none; color: white; font-size: 16px; border-radius: 5px; }
         .history-button.zhuang { background-color: red; }
         .history-button.xian { background-color: blue; }
         .history-button.he { background-color: green; }
         .history-button.reset { background-color: gray; }
-
-        .history-display {
-            display: grid;
-            grid-template-columns: repeat(6, 1fr);
-            gap: 5px;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 10px;
-            background-color: #f9f9f9;
-            width: fit-content;
-            margin-top: 10px;
-        }
-        .result-circle {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            color: white;
-            font-weight: bold;
-            font-size: 1em;
-            background-color: #e0e0e0; /* 初始為灰色 */
-        }
+        .history-display { display: grid; grid-template-columns: repeat(6, 1fr); gap: 5px; padding: 10px; border: 1px solid #ddd; border-radius: 10px; background-color: #f9f9f9; width: fit-content; margin-top: 10px; }
+        .result-circle { display: flex; justify-content: center; align-items: center; width: 40px; height: 40px; border-radius: 50%; color: white; font-weight: bold; font-size: 1em; background-color: #e0e0e0; }
         .result-circle.zhuang { background-color: red; }
         .result-circle.xian { background-color: blue; }
         .result-circle.he { background-color: green; }
-
-        /* 電腦橫式排版 */
-        @media (min-width: 768px) {
-            .container {
-                flex-direction: row;
-                justify-content: center;
-                align-items: flex-start;
-            }
-            .settings, .prediction {
-                max-width: 300px;
-            }
-        }
-
-        /* 手機直式排版 */
-        @media (max-width: 767px) {
-            .container {
-                flex-direction: column-reverse;
-            }
-            .history-container {
-                flex-direction: column;
-            }
-        }
     </style>
 </head>
 <body>
@@ -123,20 +27,14 @@
 <h1>Timo百家輔助</h1>
 
 <div class="container">
-    <!-- 預測結果區域 -->
     <div class="prediction">
         <h2>預測結果</h2>
         <div id="predictionResult" class="result">請輸入歷史結果...</div>
         <div class="history-display" id="historyDisplay">
-            <!-- 生成6x6的空格子，並設定預設樣式 -->
         </div>
     </div>
-
-    <!-- 設置區域 -->
     <div class="settings">
         <h2>設定</h2>
-
-        <!-- 本金選擇 -->
         <label for="capital">本金:</label>
         <select id="capital">
             <option value="3000">3000</option>
@@ -144,8 +42,6 @@
             <option value="custom">自訂</option>
         </select>
         <input type="number" id="customCapital" placeholder="輸入本金" style="display:none;" />
-
-        <!-- 打法選擇 -->
         <label for="strategy">打法:</label>
         <select id="strategy">
             <option value="tianmen">天門</option>
@@ -154,7 +50,6 @@
     </div>
 </div>
 
-<!-- 歷史開牌輸入區域 -->
 <div class="history-container">
     <button class="history-button zhuang" onclick="addHistory('莊')">莊</button>
     <button class="history-button xian" onclick="addHistory('閒')">閒</button>
@@ -165,24 +60,28 @@
 <script>
     const maxRows = 6;
     const maxCols = 6;
-    let history = []; // 儲存歷史結果
+    const minBet = 100; // 最低下注金額
+    let history = [];
+    let previousRecommendation = '';
+    let currentBetAmount = minBet; // 起始下注金額設為最低下注
+    const baseBetPercentage = 0.05; // 初始下注為本金的5%
     const historyDisplay = document.getElementById('historyDisplay');
 
     function initializeGrid() {
         for (let i = 0; i < maxRows * maxCols; i++) {
             const circle = document.createElement('div');
             circle.className = 'result-circle';
-            circle.setAttribute('data-index', i); // 設定索引
+            circle.setAttribute('data-index', i);
             historyDisplay.appendChild(circle);
         }
     }
 
     function addHistory(result) {
-        if (history.length >= maxRows * maxCols) return; // 超過36個不再添加
+        if (history.length >= maxRows * maxCols) return;
         history.push(result);
         updateGrid();
         if (history.length >= 10) {
-            updatePrediction();
+            updatePrediction(result);
         } else {
             document.getElementById('predictionResult').innerText = `已輸入 ${history.length} 局，至少輸入 10 局後開始預測。`;
         }
@@ -208,11 +107,11 @@
         return row * maxCols + col;
     }
 
-    function updatePrediction() {
+    function updatePrediction(actualResult) {
         let zhuangCount = history.filter(item => item === '莊').length;
         let xianCount = history.filter(item => item === '閒').length;
 
-        let recommendation, winProbability, betAmount;
+        let recommendation, winProbability;
 
         if (zhuangCount > xianCount) {
             recommendation = "閒";
@@ -221,22 +120,33 @@
             recommendation = "莊";
             winProbability = ((zhuangCount / history.length) * 100).toFixed(2);
         } else {
-            recommendation = "隨機";
+            recommendation = "建議看一把";
             winProbability = "50.00";
         }
 
         const capitalSelect = document.getElementById('capital').value;
         let capital = capitalSelect === 'custom' ? parseInt(document.getElementById('customCapital').value) : parseInt(capitalSelect);
-        betAmount = capital ? Math.round(capital * 0.05) : "未設置本金"; // 建議下注金額為本金的5%
+        if (capital && recommendation !== "建議看一把") {
+            if (previousRecommendation && previousRecommendation !== actualResult) {
+                // 天門公式：下注金額隨著每次錯誤而加倍，但不低於最低下注金額
+                currentBetAmount = Math.max(currentBetAmount * 2, minBet);
+            } else {
+                // 如果成功或是第一次下注，重置為基礎金額，但不低於最低下注金額
+                currentBetAmount = Math.max(Math.round(capital * baseBetPercentage), minBet);
+            }
+        }
 
+        previousRecommendation = recommendation;
         document.getElementById('predictionResult').innerText = 
             `預測結果：${recommendation}\n` +
             `預估勝率：${winProbability}%\n` +
-            `建議下注金額：$${betAmount}`;
+            `建議下注金額：$${currentBetAmount || "未設置本金"}`;
     }
 
     function resetHistory() {
         history = [];
+        previousRecommendation = '';
+        currentBetAmount = minBet;
         updateGrid();
         document.getElementById('predictionResult').innerText = "已重置歷史結果，請重新輸入...";
     }
