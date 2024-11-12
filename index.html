@@ -124,6 +124,34 @@
             font-weight: 500;
             text-align: center;
         }
+
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 5px;
+            padding: 10px;
+            border-radius: 10px;
+            background-color: #fafafa;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+            margin-top: 10px;
+        }
+
+        .small-circle {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            color: white;
+            font-weight: bold;
+            font-size: 1em;
+            transition: transform 0.2s ease;
+        }
+
+        .small-circle.zhuang { background-color: #d9534f; }
+        .small-circle.xian { background-color: #5bc0de; }
+        .small-circle.he { background-color: #5cb85c; }
     </style>
 </head>
 <body>
@@ -158,6 +186,9 @@
             <div class="accuracy">
                 <div>目前預測準確率：<span id="accuracyRate">0%</span></div>
             </div>
+            <div class="grid-container" id="historyDisplay">
+                <!-- 6x6 格子的歷史開牌區 -->
+            </div>
         </div>
     </div>
 </div>
@@ -181,6 +212,7 @@
 
     let totalPredictions = 0;
     let correctPredictions = 0;
+    const history = [];
 
     function calculateResult() {
         const playerInput = document.getElementById('player').value.padEnd(3, '0');
@@ -216,20 +248,28 @@
             predictedOutcome = "莊";
         } else {
             recommendation = "建議看一把";
-            predictedOutcome = "看一把";
+            predictedOutcome = "和";
         }
 
         document.getElementById("predictionResult").innerText = recommendation;
 
         // 模擬真實結果（這裡需要用戶輸入真實結果，這裡以隨機結果作為示例）
         const actualOutcome = Math.random() < 0.5 ? "閒" : "莊";
+        
+        // 儲存結果到歷史記錄並展示
+        history.push(actualOutcome);
+        updateHistoryDisplay();
 
-        // 更新預測準確率
-        totalPredictions++;
-        if (predictedOutcome === actualOutcome) {
-            correctPredictions++;
+        // 從第二次輸入開始計算準確率
+        if (totalPredictions > 0) {
+            totalPredictions++;
+            if (predictedOutcome === actualOutcome) {
+                correctPredictions++;
+            }
+            updateAccuracy();
+        } else {
+            totalPredictions++;
         }
-        updateAccuracy();
 
         clearInputs();
     }
@@ -237,6 +277,17 @@
     function updateAccuracy() {
         const accuracyRate = ((correctPredictions / totalPredictions) * 100).toFixed(2);
         document.getElementById("accuracyRate").innerText = `${accuracyRate}%`;
+    }
+
+    function updateHistoryDisplay() {
+        const historyDisplay = document.getElementById("historyDisplay");
+        historyDisplay.innerHTML = ""; // 清空歷史顯示區
+        history.forEach((outcome, index) => {
+            const circle = document.createElement("div");
+            circle.className = "small-circle " + (outcome === "莊" ? "zhuang" : outcome === "閒" ? "xian" : "he");
+            circle.innerText = outcome;
+            historyDisplay.appendChild(circle);
+        });
     }
 
     function clearInputs() {
@@ -248,9 +299,11 @@
         document.getElementById('player').value = "";
         document.getElementById('banker').value = "";
         document.getElementById("predictionResult").innerText = "等待輸入...";
+        document.getElementById("accuracyRate").innerText = "0%";
         totalPredictions = 0;
         correctPredictions = 0;
-        updateAccuracy();
+        history.length = 0;
+        updateHistoryDisplay();
     }
 </script>
 
