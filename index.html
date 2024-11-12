@@ -51,19 +51,25 @@
                 flex-direction: row;
                 justify-content: space-between;
                 max-width: 1200px;
+                gap: 20px; /* 增加間距 */
             }
             .panel {
                 width: 50%; /* 1:1 比例 */
-            }
-            .social-links.mobile {
-                display: none;
+                background-color: #ffffff;
+                border-radius: 12px;
+                box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+                padding: 25px; /* 增加內邊距 */
             }
             .social-links.desktop {
                 display: flex;
                 width: 100%;
-                margin-top: 10px;
+                justify-content: center;
+                margin-top: 20px; /* 靠下 */
                 padding-top: 15px;
                 border-top: 1px solid #ddd;
+            }
+            .social-links.mobile {
+                display: none;
             }
         }
 
@@ -137,9 +143,9 @@
         select {
             background-color: #333333;
             color: #ffffff;
-            text-align: center; /* 居中顯示文字 */
-            -moz-text-align-last: center; /* Firefox 專用 */
-            text-align-last: center; /* IE 和其他瀏覽器 */
+            text-align: center;
+            text-align-last: center; /* 確保文字置中 */
+            -moz-text-align-last: center; /* Firefox */
         }
 
         .prediction-result, .accuracy {
