@@ -59,6 +59,7 @@
                 border-radius: 12px;
                 box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
                 padding: 25px; /* 增加內邊距 */
+                position: relative;
             }
             .social-links.desktop {
                 display: flex;
@@ -73,10 +74,13 @@
             }
             /* 橫屏模式下的虎翼團隊文字樣式 */
             .team-info {
-                text-align: center;
+                position: absolute;
+                bottom: 10px; /* 往下移 */
+                left: 50%;
+                transform: translateX(-50%);
                 font-size: 1.8em; /* 放大字體 */
                 color: #555;
-                margin-top: 30px; /* 往下移 */
+                text-align: center;
             }
         }
 
@@ -97,7 +101,6 @@
                 font-size: 1.3em; /* 調整字體大小 */
                 color: #555;
                 margin-top: 20px;
-                order: 2; /* 移動到兩個功能塊中間 */
             }
         }
 
@@ -263,16 +266,14 @@
         <button class="calculate-btn" onclick="calculateResult()">計算結果</button>
         <button class="clear-btn" onclick="clearAll()">消除全部</button>
 
-        <!-- 橫屏模式的社交按鈕 -->
+        <!-- 橫屏模式下的社交按鈕和團隊訊息 -->
         <div class="social-links desktop">
             <a href="https://youtube.com/channel/UCj1P2Tt82JtrbhVXui8DXcg?si=V9NidILTpYH3dTZx" target="_blank" class="youtube"></a>
             <a href="https://www.instagram.com/gamble_couple666/profilecard/?igsh=OGt1ZGJndHNiMTB4" target="_blank" class="instagram"></a>
             <a href="https://lin.ee/ivW2LRm" target="_blank" class="line"></a>
         </div>
+        <div class="team-info">🪽虎翼團隊-賭狗情侶🪽</div>
     </div>
-
-    <!-- 新增的團隊信息 -->
-    <div class="team-info">🪽虎翼團隊-賭狗情侶🪽</div>
 
     <div class="panel">
         <h2>公式選擇</h2>
