@@ -11,9 +11,9 @@
             background-color: #f5f5f7; 
             color: #333; 
             display: flex; 
-            justify-content: center;
-            align-items: center; 
-            min-height: 100vh;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
             text-rendering: optimizeLegibility;
         }
         h1 { 
@@ -136,13 +136,35 @@
             border-radius: 50%;
             color: white;
             font-weight: bold;
-            font-size: 1em;
+            font-size: 0.8em;
             transition: transform 0.2s ease;
         }
 
         .small-circle.zhuang { background-color: #d9534f; }
         .small-circle.xian { background-color: #5bc0de; }
         .small-circle.he { background-color: #5cb85c; }
+
+        .social-links {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        .social-links a {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            color: white;
+            font-size: 1.2em;
+            text-decoration: none;
+            transition: background-color 0.3s ease;
+        }
+        .social-links .youtube { background-color: #FF0000; }
+        .social-links .instagram { background-color: #C13584; }
+        .social-links .line { background-color: #00B900; }
     </style>
 </head>
 <body>
@@ -182,6 +204,12 @@
             </div>
         </div>
     </div>
+</div>
+
+<div class="social-links">
+    <a href="https://youtube.com/channel/UCj1P2Tt82JtrbhVXui8DXcg?si=V9NidILTpYH3dTZx" target="_blank" class="youtube">YT</a>
+    <a href="https://www.instagram.com/gamble_couple666/profilecard/?igsh=OGt1ZGJndHNiMTB4" target="_blank" class="instagram">IG</a>
+    <a href="https://lin.ee/ivW2LRm" target="_blank" class="line">LINE</a>
 </div>
 
 <script>
@@ -265,7 +293,7 @@
         updateHistoryDisplay();
 
         // 檢查預測準確率（從第二局開始比較）
-        if (history.length > 1) {
+        if (history.length > 1 && actualOutcome !== "和") {
             totalPredictions++;
             if (predictions[history.length - 2] === actualOutcome) {
                 correctPredictions++;
