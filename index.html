@@ -4,11 +4,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Timo百家輔助</title>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@900&display=swap" rel="stylesheet">
+    <!-- 引入本地字體 -->
     <style>
+        @font-face {
+            font-family: 'CustomFont';
+            src: url('https://zheyujiang2003.github.io/Timo/30b7402929268a2c401c67dbd45ddc56.ttf') format('truetype');
+            font-weight: normal;
+            font-style: normal;
+        }
+
+        /* 使用本地字體 */
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { 
-            font-family: 'Noto Serif TC', serif;
+            font-family: 'CustomFont', serif;
             background-color: #f8f9fa; 
             color: #333; 
             display: flex; 
@@ -189,7 +197,7 @@
             transform: scale(1.1);
         }
 
-        .social-links .youtube { background-image: url('https://upload.wikimedia.org/wikipedia/commons/4/4f/YouTube_icon_%282013-2017%29.png'); }
+        .social-links .youtube { background-image: url('https://upload.wikimedia.org/wikipedia/commons/0/09/YouTube_full-color_icon_%282017%29.svg'); }
         .social-links .instagram { background-image: url('https://upload.wikimedia.org/wikipedia/commons/a/a5/Instagram_icon.png'); }
         .social-links .line { background-image: url('https://upload.wikimedia.org/wikipedia/commons/4/41/LINE_logo.svg'); }
     </style>
@@ -246,6 +254,7 @@
 </div>
 
 <script>
+    // JavaScript functions
     function checkFormula() {
         const formula = document.getElementById("formulaSelect").value;
         if (formula === "ThreePoint") {
