@@ -2,7 +2,7 @@
 <html lang="zh-Hant">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>Timo百家輔助</title>
     <style>
         @font-face {
@@ -21,11 +21,12 @@
             flex-direction: column;
             align-items: center;
             padding: 20px;
-            text-align: center;
         }
-        h1 {
-            font-size: 2.5em;
-            margin-bottom: 15px;
+        h1 { 
+            font-size: 2.5em; 
+            margin-bottom: 20px; 
+            color: #333; 
+            text-align: center;
         }
         
         .container {
@@ -35,36 +36,85 @@
             width: 100%;
             max-width: 600px;
             background: #fff;
-            border-radius: 10px;
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            padding: 25px;
+            overflow: hidden;
             align-items: center;
+        }
+
+        @media (orientation: landscape) and (min-width: 500px) {
+            .container {
+                flex-direction: row;
+                justify-content: space-between;
+                max-width: 1200px;
+                gap: 20px;
+            }
+            .panel {
+                width: 50%;
+                background-color: #ffffff;
+                border-radius: 12px;
+                box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+                padding: 25px;
+                position: relative;
+            }
+            .social-links.desktop {
+                display: flex;
+                width: 100%;
+                justify-content: center;
+                margin-top: 20px;
+                padding-top: 15px;
+                border-top: 1px solid #ddd;
+            }
+            .social-links.mobile {
+                display: none;
+            }
+            .team-info {
+                display: block;
+                text-align: center;
+                font-size: 1.7em;
+                color: #555;
+                margin-top: 15px;
+            }
+        }
+
+        @media (orientation: portrait), (max-width: 499px) {
+            .social-links.desktop {
+                display: none;
+            }
+            .social-links.mobile {
+                display: flex;
+                gap: 15px;
+                justify-content: center;
+                margin-top: 15px;
+            }
+            .team-info {
+                display: block;
+                text-align: center;
+                font-size: 1.3em;
+                color: #555;
+                margin: 20px 0;
+            }
         }
 
         .panel {
             width: 100%;
             padding: 15px;
             background-color: #ffffff;
-            border-radius: 10px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            border-radius: 12px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
             margin-bottom: 20px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 15px;
         }
 
         .input-group {
-            margin-bottom: 10px;
-            width: 100%;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
+            margin-bottom: 15px;
         }
 
         label {
-            font-size: 1em;
+            font-size: 1.1em;
             color: #333;
+            margin-bottom: 5px;
+            display: block;
         }
 
         input[type="text"] {
@@ -79,18 +129,19 @@
 
         input[type="text"]:focus {
             border-color: #0071e3;
-            box-shadow: 0 0 0 3px rgba(0, 113, 227, 0.15);
+            box-shadow: 0 0 0 4px rgba(0, 113, 227, 0.15);
         }
 
         button, select {
             width: 100%;
-            padding: 10px;
+            padding: 12px;
             font-size: 1em;
             color: white;
             border: none;
             border-radius: 8px;
             cursor: pointer;
             transition: all 0.3s ease;
+            margin-top: 10px;
             font-family: 'CustomFont', serif;
         }
 
@@ -103,25 +154,25 @@
         select {
             background-color: #333333;
             color: #ffffff;
-            padding-left: 8px;
-            -moz-text-align-last: center;
+            text-align: left;
+            padding-left: 10px;
+            -moz-text-align-last: left;
         }
 
         .prediction-result, .accuracy {
-            padding: 12px;
-            border-radius: 8px;
+            padding: 15px;
+            border-radius: 10px;
             background-color: #f9f9f9;
             box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
             font-size: 1em;
             color: #333;
             margin-top: 10px;
-            width: 100%;
+            text-align: center;
         }
 
         .prediction-result h2 {
-            font-size: 1em;
+            font-size: 1.3em;
             color: #333;
-            margin-bottom: 5px;
         }
 
         .accuracy {
@@ -132,19 +183,18 @@
         .grid-container {
             display: grid;
             grid-template-columns: repeat(6, 1fr);
-            gap: 5px;
+            gap: 1px;
             padding: 5px;
             border-radius: 5px;
             background-color: #fafafa;
             border: 1px solid #ddd;
-            width: 100%;
         }
 
         .grid-item {
             display: flex;
             justify-content: center;
             align-items: center;
-            font-size: 0.9em;
+            font-size: 1em;
             color: #333;
             height: 40px;
             border: 1px solid #ddd;
@@ -167,13 +217,13 @@
 
         .social-links {
             display: flex;
-            gap: 10px;
+            gap: 15px;
             justify-content: center;
         }
 
         .social-links a {
-            width: 40px;
-            height: 40px;
+            width: 50px;
+            height: 50px;
             display: inline-block;
             background-size: cover;
             background-position: center;
@@ -189,42 +239,6 @@
         .social-links .youtube { background-image: url('https://upload.wikimedia.org/wikipedia/commons/0/09/YouTube_full-color_icon_%282017%29.svg'); }
         .social-links .instagram { background-image: url('https://upload.wikimedia.org/wikipedia/commons/a/a5/Instagram_icon.png'); }
         .social-links .line { background-image: url('https://upload.wikimedia.org/wikipedia/commons/4/41/LINE_logo.svg'); }
-
-        /* 手機橫屏模式 */
-        @media (orientation: landscape) and (max-width: 900px) {
-            .container {
-                flex-direction: row;
-                justify-content: space-between;
-                width: 98%;
-                gap: 20px;
-            }
-            .panel {
-                width: 48%;
-                padding: 20px;
-                border-radius: 10px;
-                box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
-                margin: 0;
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-            }
-            .team-info {
-                font-size: 1.4em;
-                color: #555;
-                margin-top: 10px;
-                white-space: nowrap;
-            }
-        }
-
-        /* 電腦和平板保持原始布局 */
-        @media (min-width: 901px) {
-            .container {
-                flex-direction: column;
-                gap: 20px;
-                max-width: 600px;
-                padding: 20px;
-            }
-        }
     </style>
 </head>
 <body>
@@ -245,7 +259,7 @@
         <button class="calculate-btn" onclick="calculateResult()">計算結果</button>
         <button class="clear-btn" onclick="clearAll()">消除全部</button>
 
-        <div class="social-links">
+        <div class="social-links desktop">
             <a href="https://youtube.com/channel/UCj1P2Tt82JtrbhVXui8DXcg?si=V9NidILTpYH3dTZx" target="_blank" class="youtube"></a>
             <a href="https://www.instagram.com/gamble_couple666/profilecard/?igsh=OGt1ZGJndHNiMTB4" target="_blank" class="instagram"></a>
             <a href="https://lin.ee/ivW2LRm" target="_blank" class="line"></a>
@@ -279,44 +293,136 @@
 </div>
 
 <script>
-    let totalPredictions = 0;
-    let correctPredictions = 0;
-    const history = [];
+    let totalPredictionsAP = 0;
+    let correctPredictionsAP = 0;
+    let totalPredictionsThreePoint = 0;
+    let correctPredictionsThreePoint = 0;
+    const historyAP = [];
+    const historyThreePoint = [];
+    let currentFormula = 'AP';
+
+    function checkFormula() {
+        const formula = document.getElementById("formulaSelect").value;
+        currentFormula = formula;
+        updateHistoryDisplay();
+        updateAccuracy();
+        if (formula === "ThreePoint") {
+            alert("請選擇房間30局內為優，以提高三點叉公式的預測效果！");
+        }
+    }
 
     function calculateResult() {
-        const playerInput = document.getElementById('player').value;
-        const bankerInput = document.getElementById('banker').value;
+        const playerInput = document.getElementById('player').value.padEnd(3, '0');
+        const bankerInput = document.getElementById('banker').value.padEnd(3, '0');
 
-        if (!playerInput || !bankerInput || playerInput.length !== 3 || bankerInput.length !== 3) {
-            alert("請輸入正確的三位數牌點數");
+        if (!/^[0-9]+$/.test(playerInput) || !/^[0-9]+$/.test(bankerInput) || playerInput.length !== 3 || bankerInput.length !== 3) {
+            alert("請確保輸入的牌點數為三位數字或字母（A、J、Q、K），無補牌時請輸入0。");
             return;
         }
 
         const playerPoints = (parseInt(playerInput[0]) + parseInt(playerInput[1]) + parseInt(playerInput[2])) % 10;
         const bankerPoints = (parseInt(bankerInput[0]) + parseInt(bankerInput[1]) + parseInt(bankerInput[2])) % 10;
+        let actualOutcome = playerPoints > bankerPoints ? "閒" : bankerPoints > playerPoints ? "莊" : "和";
+        let predictedOutcome, recommendation;
 
-        const outcome = playerPoints > bankerPoints ? "閒" : bankerPoints > playerPoints ? "莊" : "和";
-        document.getElementById("predictionResult").innerText = `結果：${outcome}`;
-        
-        // 更新準確率
-        totalPredictions++;
-        if (outcome === "莊") correctPredictions++;
+        if (currentFormula === "AP") {
+            const playerAP = {0: 0.5, 1: 0.4, 2: 0.3, 3: 0.3, 4: 0.1, 5: 0.2, 6: 0.3, 7: 0.3, 8: 0.5, 9: 0.1}[playerPoints];
+            const bankerAP = {0: 0.5, 1: 0.4, 2: 0.3, 3: 0.3, 4: 0.1, 5: 0.2, 6: 0.3, 7: 0.3, 8: 0.5, 9: 0.1}[bankerPoints];
+            predictedOutcome = playerAP > bankerAP ? "閒" : bankerAP > playerAP ? "莊" : "看一把";
+            recommendation = predictedOutcome === "看一把" ? "建議看一把" : `建議下注：${predictedOutcome}`;
+            historyAP.push({ actual: actualOutcome, predicted: predictedOutcome });
+            
+            if (predictedOutcome !== "看一把" && actualOutcome !== "和") {
+                totalPredictionsAP++;
+                if (predictedOutcome === actualOutcome) {
+                    correctPredictionsAP++;
+                }
+            }
+        } else if (currentFormula === "ThreePoint") {
+            const lastOutcome = historyThreePoint.length > 0 ? historyThreePoint[historyThreePoint.length - 1].actual : null;
+            const difference = Math.abs(playerPoints - bankerPoints);
+            if (actualOutcome === "和") {
+                recommendation = "建議看一把";
+                predictedOutcome = "看一把";
+            } else {
+                predictedOutcome = difference <= 3 ? (lastOutcome === "莊" ? "閒" : "莊") : lastOutcome;
+                recommendation = lastOutcome === "和" ? "建議看一把" : `推薦下注：${predictedOutcome}`;
+            }
+            historyThreePoint.push({ actual: actualOutcome, predicted: predictedOutcome });
+            
+            if (predictedOutcome !== "看一把" && actualOutcome !== "和") {
+                totalPredictionsThreePoint++;
+                if (predictedOutcome === actualOutcome) {
+                    correctPredictionsThreePoint++;
+                }
+            }
+        }
+
+        document.getElementById("predictionResult").innerText = recommendation;
+        updateHistoryDisplay();
         updateAccuracy();
+        clearInputs();
     }
 
     function updateAccuracy() {
-        const accuracyRate = ((correctPredictions / totalPredictions) * 100).toFixed(2);
+        let accuracyRate;
+        if (currentFormula === "AP") {
+            accuracyRate = (totalPredictionsAP <= 1) ? 100 : ((correctPredictionsAP / totalPredictionsAP) * 100).toFixed(2);
+        } else if (currentFormula === "ThreePoint") {
+            accuracyRate = (totalPredictionsThreePoint <= 1) ? 100 : ((correctPredictionsThreePoint / totalPredictionsThreePoint) * 100).toFixed(2);
+        }
         document.getElementById("accuracyRate").innerText = `${accuracyRate}%`;
     }
 
+    function updateHistoryDisplay() {
+        const historyDisplay = document.getElementById("historyDisplay");
+        const items = historyDisplay.querySelectorAll(".grid-item");
+
+        items.forEach(item => {
+            item.classList.remove('zhuang', 'xian', 'heju');
+            item.innerText = '';
+        });
+
+        const history = currentFormula === "AP" ? historyAP : historyThreePoint;
+
+        history.forEach((entry, index) => {
+            const row = index % 6;
+            const col = Math.floor(index / 6);
+            const targetIndex = row * 6 + col;
+            const targetItem = items[targetIndex];
+            
+            if (entry.actual === '莊') {
+                targetItem.classList.add('zhuang');
+                targetItem.innerText = '莊';
+            } else if (entry.actual === '閒') {
+                targetItem.classList.add('xian');
+                targetItem.innerText = '閒';
+            } else {
+                targetItem.classList.add('heju');
+                targetItem.innerText = '和';
+            }
+        });
+    }
+
+    function clearInputs() {
+        document.getElementById('player').value = "";
+        document.getElementById('banker').value = "";
+    }
+
     function clearAll() {
-        document.getElementById("player").value = "";
-        document.getElementById("banker").value = "";
+        document.getElementById('player').value = "";
+        document.getElementById('banker').value = "";
         document.getElementById("predictionResult").innerText = "等待輸入...";
         document.getElementById("accuracyRate").innerText = "100%";
-        totalPredictions = 0;
-        correctPredictions = 0;
-        history.length = 0;
+        
+        totalPredictionsAP = 0;
+        correctPredictionsAP = 0;
+        totalPredictionsThreePoint = 0;
+        correctPredictionsThreePoint = 0;
+        historyAP.length = 0;
+        historyThreePoint.length = 0;
+        
+        updateHistoryDisplay();
     }
 </script>
 
