@@ -4,26 +4,24 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Timo百家輔助</title>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@900&display=swap" rel="stylesheet">
     <style>
-        /* 使用 Noto Serif TC 字體 */
-        body {
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { 
             font-family: 'Noto Serif TC', serif;
-            background-color: #f8f9fa;
-            color: #333;
-            display: flex;
+            background-color: #f8f9fa; 
+            color: #333; 
+            display: flex; 
             flex-direction: column;
             align-items: center;
             padding: 20px;
-            margin: 0;
         }
-
         h1 { 
-            font-size: 2em; 
+            font-size: 2.5em; 
             margin-bottom: 20px; 
             color: #333; 
             text-align: center;
-            font-weight: 700;
+            font-weight: 900;
         }
         
         .container {
@@ -40,12 +38,25 @@
             align-items: center;
         }
 
+        /* 自適應左右佈局 */
+        @media (min-width: 768px) and (orientation: landscape) {
+            .container {
+                flex-direction: row;
+                justify-content: space-between;
+                max-width: 1200px;
+            }
+            .panel {
+                width: 48%;
+            }
+        }
+
         .panel {
             width: 100%;
             padding: 15px;
             background-color: #ffffff;
             border-radius: 12px;
             box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+            margin-bottom: 20px;
         }
 
         .input-group {
@@ -178,56 +189,9 @@
             transform: scale(1.1);
         }
 
-        .social-links .youtube { 
-            background-image: url('https://upload.wikimedia.org/wikipedia/commons/0/09/YouTube_full-color_icon_%282017%29.svg'); 
-            background-position: -10px center;
-            background-size: cover;
-        }
+        .social-links .youtube { background-image: url('https://upload.wikimedia.org/wikipedia/commons/4/4f/YouTube_icon_%282013-2017%29.png'); }
         .social-links .instagram { background-image: url('https://upload.wikimedia.org/wikipedia/commons/a/a5/Instagram_icon.png'); }
         .social-links .line { background-image: url('https://upload.wikimedia.org/wikipedia/commons/4/41/LINE_logo.svg'); }
-
-        /* 平板：調整為兩欄佈局 */
-        @media (min-width: 768px) and (max-width: 1024px) {
-            .container {
-                flex-direction: row;
-                align-items: flex-start;
-                max-width: 1024px;
-            }
-            .panel {
-                width: 48%;
-            }
-            .grid-container {
-                grid-template-columns: repeat(8, 1fr); /* 平板上顯示更多的格子 */
-            }
-        }
-
-        /* 手機：縮小字體和間距，並將容器內元素居中 */
-        @media (max-width: 480px) {
-            h1 {
-                font-size: 1.5em;
-            }
-            .container {
-                padding: 15px;
-            }
-            .panel {
-                padding: 10px;
-            }
-            button, select {
-                padding: 10px;
-                font-size: 0.9em;
-            }
-            .grid-container {
-                grid-template-columns: repeat(4, 1fr); /* 手機上顯示4列格子 */
-            }
-        }
-
-        /* 桌面：將社交按鈕放到「計算結果」和「消除全部」按鈕下方 */
-        @media (min-width: 1025px) {
-            .panel .social-links {
-                width: 100%;
-                margin-top: 10px;
-            }
-        }
     </style>
 </head>
 <body>
@@ -247,13 +211,6 @@
         </div>
         <button class="calculate-btn" onclick="calculateResult()">計算結果</button>
         <button class="clear-btn" onclick="clearAll()">消除全部</button>
-        
-        <!-- 桌面版將社交按鈕置於此處 -->
-        <div class="social-links">
-            <a href="https://youtube.com/channel/UCj1P2Tt82JtrbhVXui8DXcg?si=V9NidILTpYH3dTZx" target="_blank" class="youtube"></a>
-            <a href="https://www.instagram.com/gamble_couple666/profilecard/?igsh=OGt1ZGJndHNiMTB4" target="_blank" class="instagram"></a>
-            <a href="https://lin.ee/ivW2LRm" target="_blank" class="line"></a>
-        </div>
     </div>
 
     <div class="panel">
@@ -272,6 +229,7 @@
         </div>
 
         <div class="grid-container" id="historyDisplay">
+            <!-- 6x6 的棋盤格子樣式 -->
             <script>
                 for (let i = 0; i < 36; i++) {
                     document.write('<div class="grid-item"></div>');
@@ -280,8 +238,7 @@
         </div>
     </div>
 
-    <!-- 手機和平板版將社交按鈕置於此處 -->
-    <div class="social-links mobile">
+    <div class="social-links">
         <a href="https://youtube.com/channel/UCj1P2Tt82JtrbhVXui8DXcg?si=V9NidILTpYH3dTZx" target="_blank" class="youtube"></a>
         <a href="https://www.instagram.com/gamble_couple666/profilecard/?igsh=OGt1ZGJndHNiMTB4" target="_blank" class="instagram"></a>
         <a href="https://lin.ee/ivW2LRm" target="_blank" class="line"></a>
@@ -289,7 +246,132 @@
 </div>
 
 <script>
-    // JS 代碼保持不變
+    function checkFormula() {
+        const formula = document.getElementById("formulaSelect").value;
+        if (formula === "ThreePoint") {
+            alert("請選擇房間30局內為優，以提高三點叉公式的預測效果！");
+        }
+    }
+
+    let totalPredictions = 0;
+    let correctPredictions = 0;
+    const history = [];
+    const apPredictions = [];
+    const threePointPredictions = [];
+
+    function calculateResult() {
+        const playerInput = document.getElementById('player').value.padEnd(3, '0');
+        const bankerInput = document.getElementById('banker').value.padEnd(3, '0');
+        const formula = document.getElementById("formulaSelect").value;
+
+        if (!/^[0-9]+$/.test(playerInput) || !/^[0-9]+$/.test(bankerInput) || playerInput.length !== 3 || bankerInput.length !== 3) {
+            alert("請確保輸入的牌點數為三位數字或字母（A、J、Q、K），無補牌時請輸入0。");
+            return;
+        }
+
+        const playerPoints = (parseInt(playerInput[0]) + parseInt(playerInput[1]) + parseInt(playerInput[2])) % 10;
+        const bankerPoints = (parseInt(bankerInput[0]) + parseInt(bankerInput[1]) + parseInt(bankerInput[2])) % 10;
+        let actualOutcome = playerPoints > bankerPoints ? "閒" : bankerPoints > playerPoints ? "莊" : "和";
+        let predictedOutcome, recommendation;
+
+        if (formula === "AP") {
+            const playerAP = {0: 0.5, 1: 0.4, 2: 0.3, 3: 0.3, 4: 0.1, 5: 0.2, 6: 0.3, 7: 0.3, 8: 0.5, 9: 0.1}[playerPoints];
+            const bankerAP = {0: 0.5, 1: 0.4, 2: 0.3, 3: 0.3, 4: 0.1, 5: 0.2, 6: 0.3, 7: 0.3, 8: 0.5, 9: 0.1}[bankerPoints];
+            predictedOutcome = playerAP > bankerAP ? "閒" : bankerAP > playerAP ? "莊" : "看一把";
+            recommendation = predictedOutcome === "看一把" ? "建議看一把" : `建議下注：${predictedOutcome}`;
+            apPredictions.push(predictedOutcome);
+        } else if (formula === "ThreePoint") {
+            if (history.length > 0) {
+                const lastOutcome = history[history.length - 1];
+                const difference = Math.abs(playerPoints - bankerPoints);
+                if (actualOutcome === "和") {
+                    recommendation = "建議看一把";
+                    predictedOutcome = "看一把";
+                } else {
+                    predictedOutcome = difference <= 3 ? (lastOutcome === "莊" ? "閒" : "莊") : lastOutcome;
+                    recommendation = lastOutcome === "和" ? "建議看一把" : `推薦下注：${predictedOutcome}`;
+                }
+            } else {
+                recommendation = "建議看一把";
+                predictedOutcome = "看一把";
+            }
+            threePointPredictions.push(predictedOutcome);
+        }
+
+        document.getElementById("predictionResult").innerText = recommendation;
+        history.push(actualOutcome);
+        updateHistoryDisplay();
+
+        if (formula === "AP" && history.length > 1 && predictedOutcome !== "看一把") {
+            totalPredictions++;
+            if (apPredictions[history.length - 2] === actualOutcome) {
+                correctPredictions++;
+            }
+        } else if (formula === "ThreePoint" && history.length > 1 && predictedOutcome !== "看一把" && actualOutcome !== "和") {
+            totalPredictions++;
+            if (threePointPredictions[history.length - 2] === actualOutcome) {
+                correctPredictions++;
+            }
+        }
+        updateAccuracy();
+        clearInputs();
+    }
+
+    function updateAccuracy() {
+        const accuracyRate = ((correctPredictions / totalPredictions) * 100).toFixed(2);
+        document.getElementById("accuracyRate").innerText = `${accuracyRate}%`;
+    }
+
+    function updateHistoryDisplay() {
+        const historyDisplay = document.getElementById("historyDisplay");
+        const items = historyDisplay.querySelectorAll(".grid-item");
+
+        items.forEach(item => {
+            item.classList.remove('zhuang', 'xian', 'heju');
+            item.innerText = '';
+        });
+
+        history.forEach((outcome, index) => {
+            const row = index % 6;
+            const col = Math.floor(index / 6);
+            const targetIndex = row * 6 + col;
+            const targetItem = items[targetIndex];
+            
+            if (outcome === '莊') {
+                targetItem.classList.add('zhuang');
+                targetItem.innerText = '莊';
+            } else if (outcome === '閒') {
+                targetItem.classList.add('xian');
+                targetItem.innerText = '閒';
+            } else {
+                targetItem.classList.add('heju');
+                targetItem.innerText = '和';
+            }
+        });
+
+        if (history.length > 36) {
+            history.length = 0;
+            items.forEach(item => item.innerText = "");
+        }
+    }
+
+    function clearInputs() {
+        document.getElementById('player').value = "";
+        document.getElementById('banker').value = "";
+    }
+
+    function clearAll() {
+        document.getElementById('player').value = "";
+        document.getElementById('banker').value = "";
+        document.getElementById("predictionResult").innerText = "等待輸入...";
+        document.getElementById("accuracyRate").innerText = "0%";
+        totalPredictions = 0;
+        correctPredictions = 0;
+        history.length = 0;
+        apPredictions.length = 0;
+        threePointPredictions.length = 0;
+        updateHistoryDisplay();
+    }
 </script>
 
 </body>
