@@ -59,6 +59,7 @@
     let history = [];
     let previousRecommendation = '';
     let currentMultiplierIndex = 0; // 追蹤當前倍數的索引
+    const minWinProbability = 60; // 設定最低推薦下注的勝率
     const historyDisplay = document.getElementById('historyDisplay');
 
     function initializeGrid() {
@@ -117,6 +118,11 @@
             recommendation = "建議看一把";
             winProbability = "50.00";
             currentMultiplierIndex = 0; // 清零倍數索引
+        }
+
+        if (winProbability < minWinProbability) {
+            recommendation = "建議看一把";
+            winProbability = "低於60%";
         }
 
         const capitalSelect = document.getElementById('capital').value;
