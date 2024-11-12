@@ -114,36 +114,6 @@
             font-weight: 500;
         }
 
-        .grid-container {
-            display: grid;
-            grid-template-columns: repeat(6, 1fr);
-            gap: 5px;
-            padding: 10px;
-            border-radius: 10px;
-            background-color: #fafafa;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
-            margin-top: 20px;
-        }
-
-        .small-circle, .match-circle {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            color: white;
-            font-weight: bold;
-            font-size: 1em;
-            transition: transform 0.2s ease;
-        }
-
-        .small-circle.zhuang { background-color: #d9534f; }
-        .small-circle.xian { background-color: #5bc0de; }
-        .small-circle.he { background-color: #5cb85c; }
-        .match-circle.win { color: #28a745; background-color: #e0ffe0; }
-        .match-circle.lose { color: #dc3545; background-color: #ffe0e0; }
-        .match-circle.draw { color: #555; background-color: #f0f0f0; }
     </style>
 </head>
 <body>
@@ -172,83 +142,63 @@
         <div class="right-panel">
             <h2>預測區</h2>
             <div class="expectation">
-                <strong>莊閒和期望值：</strong>
-                <div id="expectationValues">莊：50% 閒：50%</div>
-                <div id="predictionResult">預測結果：等待輸入...</div>
+                <strong>優勢判斷：</strong>
+                <div id="predictionResult">等待輸入...</div>
             </div>
         </div>
-    </div>
-
-    <div class="grid-container">
-        <h2>開牌結果紀錄區</h2>
-        <div id="historyDisplay"></div>
-    </div>
-
-    <div class="grid-container">
-        <h2>勝負結果紀錄區</h2>
-        <div id="predictionMatchDisplay"></div>
     </div>
 </div>
 
 <script>
-    const history = [];
-    const results = [];
-    const predictions = [];
-    const historyDisplay = document.getElementById('historyDisplay');
-    const predictionMatchDisplay = document.getElementById('predictionMatchDisplay');
-
-    // 初始化6x6的方格
-    function initializeGrid(container, className) {
-        container.innerHTML = "";
-        for (let i = 0; i < 36; i++) {
-            const circle = document.createElement("div");
-            circle.className = className;
-            container.appendChild(circle);
-        }
+    // CP 計分表
+    function cardToCP(card) {
+        const cpMap = {
+            'A': -5, '2': -4, '3': -3, '4': -2,
+            '5': 1, '6': 2, '7': 3, '8': 0, '9': 5,
+            '10': 0, 'J': 0, 'Q': 0, 'K': 0
+        };
+        return cpMap[card.toUpperCase()] || 0;
     }
 
-    initializeGrid(historyDisplay, "small-circle");
-    initializeGrid(predictionMatchDisplay, "match-circle");
+    // AP 權重表
+    const apMap = {
+        0: 0.5, 1: 0.4, 2: 0.3, 3: 0.3, 4: 0.1,
+        5: 0.2, 6: 0.3, 7: 0.3, 8: 0.5, 9: 0.1
+    };
 
     function calculateResult() {
-        if (history.length >= 36) clearAll(); // 36局刷新紀錄
-
         const playerInput = document.getElementById('player').value.padEnd(3, '0');
         const bankerInput = document.getElementById('banker').value.padEnd(3, '0');
 
-        if (isNaN(playerInput) || isNaN(bankerInput) || playerInput.length !== 3 || bankerInput.length !== 3) {
-            alert("請確保輸入的牌點數為三位數字，無補牌時請輸入0。");
+        // 確保輸入為合法的數字或字母
+        if (!/^[0-9AJQK]+$/.test(playerInput) || !/^[0-9AJQK]+$/.test(bankerInput) || playerInput.length !== 3 || bankerInput.length !== 3) {
+            alert("請確保輸入的牌點數為三位數字或字母（A、J、Q、K），無補牌時請輸入0。");
             return;
         }
 
-        const player1 = parseInt(playerInput[0]);
-        const player2 = parseInt(playerInput[1]);
-        const player3 = parseInt(playerInput[2]);
+        // 計算 CP 值
+        const playerCP = cardToCP(playerInput[0]) + cardToCP(playerInput[1]) + cardToCP(playerInput[2]);
+        const bankerCP = cardToCP(bankerInput[0]) + cardToCP(bankerInput[1]) + cardToCP(bankerInput[2]);
 
-        const banker1 = parseInt(bankerInput[0]);
-        const banker2 = parseInt(bankerInput[1]);
-        const banker3 = parseInt(bankerInput[2]);
+        // 獲取 AP 值
+        const playerAP = apMap[Math.abs(playerCP)] || 0.1;
+        const bankerAP = apMap[Math.abs(bankerCP)] || 0.1;
 
-        const playerTotal = (player1 + player2 + player3) % 10;
-        const bankerTotal = (banker1 + banker2 + banker3) % 10;
+        // 計算優勢
+        const playerAdvantage = playerCP * playerAP;
+        const bankerAdvantage = bankerCP * bankerAP;
 
-        let result;
-        if (playerTotal > bankerTotal) {
-            result = "閒";
-            results.push("閒");
-        } else if (bankerTotal > playerTotal) {
-            result = "莊";
-            results.push("莊");
+        // 推薦下注
+        let recommendation;
+        if (playerAdvantage > bankerAdvantage) {
+            recommendation = "建議下注：閒家";
+        } else if (bankerAdvantage > playerAdvantage) {
+            recommendation = "建議下注：莊家";
         } else {
-            result = "和";
-            results.push("和");
+            recommendation = "建議看一把";
         }
 
-        history.push({ playerTotal, bankerTotal });
-        updateHistoryDisplay();
-        updateResultDisplay();
-        updatePrediction();
-        updateExpectation();
+        document.getElementById("predictionResult").innerText = recommendation;
 
         clearInputs();
     }
@@ -258,73 +208,10 @@
         document.getElementById('banker').value = "";
     }
 
-    function updateHistoryDisplay() {
-        const circles = historyDisplay.querySelectorAll(".small-circle");
-        circles.forEach((circle, index) => {
-            const item = history[index];
-            if (item) {
-                circle.className = "small-circle " + (item.playerTotal > item.bankerTotal ? "xian" : item.playerTotal < item.bankerTotal ? "zhuang" : "he");
-                circle.innerText = item.playerTotal > item.bankerTotal ? "閒" : item.playerTotal < item.bankerTotal ? "莊" : "和";
-            } else {
-                circle.className = "small-circle";
-                circle.innerText = "";
-            }
-        });
-    }
-
-    function updateResultDisplay() {
-        const circles = predictionMatchDisplay.querySelectorAll(".match-circle");
-        const currentResult = results[results.length - 1];
-        const lastPrediction = predictions.length > 0 ? predictions[predictions.length - 1] : null;
-
-        if (lastPrediction && results.length <= 36) {
-            let matchResult = "";
-            if (currentResult === lastPrediction) {
-                matchResult = "勝";
-            } else if (currentResult === "和") {
-                matchResult = "和";
-            } else {
-                matchResult = "負";
-            }
-            const circle = circles[results.length - 1];
-            circle.innerText = matchResult;
-            circle.className = "match-circle " + (matchResult === "勝" ? "win" : matchResult === "負" ? "lose" : "draw");
-        }
-    }
-
-    function updatePrediction() {
-        if (results.length >= 5) {
-            const recentResults = results.slice(-5);
-            const xianCount = recentResults.filter(r => r === "閒").length;
-            const zhuangCount = recentResults.filter(r => r === "莊").length;
-
-            const prediction = xianCount > zhuangCount ? "閒" : zhuangCount > xianCount ? "莊" : "建議看一把";
-            document.getElementById("predictionResult").innerText = "預測結果：" + prediction;
-            if (prediction !== "建議看一把") predictions.push(prediction);
-        }
-    }
-
-    function updateExpectation() {
-        const zhuangCount = results.filter(r => r === "莊").length;
-        const xianCount = results.filter(r => r === "閒").length;
-        const total = zhuangCount + xianCount;
-
-        const zhuangPercent = total > 0 ? ((zhuangCount / total) * 100).toFixed(2) : 50;
-        const xianPercent = total > 0 ? ((xianCount / total) * 100).toFixed(2) : 50;
-
-        document.getElementById("expectationValues").innerText = `莊：${zhuangPercent}% 閒：${xianPercent}%`;
-    }
-
     function clearAll() {
         document.getElementById('player').value = "";
         document.getElementById('banker').value = "";
-        history.length = 0;
-        results.length = 0;
-        predictions.length = 0;
-        initializeGrid(historyDisplay, "small-circle");
-        initializeGrid(predictionMatchDisplay, "match-circle");
-        document.getElementById("predictionResult").innerText = "預測結果：等待輸入...";
-        document.getElementById("expectationValues").innerText = "莊：50% 閒：50%";
+        document.getElementById("predictionResult").innerText = "等待輸入...";
     }
 </script>
 
