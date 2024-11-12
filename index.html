@@ -183,12 +183,14 @@
         if (history.length >= maxRows * maxCols) return; // 超過36個不再添加
         history.push(result);
         updateGrid();
+        updatePrediction();
     }
 
     // 更新棋盤顯示
     function updateGrid() {
         const cells = document.querySelectorAll('.result-circle');
         cells.forEach(cell => cell.className = 'result-circle'); // 重設所有格子顏色
+        cells.forEach(cell => cell.innerText = ''); // 清空所有格子文字
 
         history.forEach((result, index) => {
             const cell = cells[getVerticalIndex(index)];
@@ -202,6 +204,23 @@
         const col = Math.floor(index / maxRows);
         const row = index % maxRows;
         return row * maxCols + col;
+    }
+
+    // 根據歷史結果推薦下一步下注
+    function updatePrediction() {
+        let zhuangCount = history.filter(item => item === '莊').length;
+        let xianCount = history.filter(item => item === '閒').length;
+
+        let recommendation;
+        if (zhuangCount > xianCount) {
+            recommendation = "建議下注：閒";
+        } else if (xianCount > zhuangCount) {
+            recommendation = "建議下注：莊";
+        } else {
+            recommendation = "建議下注：隨機";
+        }
+
+        document.getElementById('predictionResult').innerText = recommendation;
     }
 
     // 重置歷史結果
