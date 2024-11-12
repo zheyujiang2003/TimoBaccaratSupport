@@ -163,7 +163,6 @@
 </div>
 
 <script>
-    // 初始設定6x6的棋盤格子
     const maxRows = 6;
     const maxCols = 6;
     let history = []; // 儲存歷史結果
@@ -178,19 +177,23 @@
         }
     }
 
-    // 增加歷史結果並更新顯示
     function addHistory(result) {
         if (history.length >= maxRows * maxCols) return; // 超過36個不再添加
         history.push(result);
         updateGrid();
-        updatePrediction();
+        if (history.length >= 10) {
+            updatePrediction();
+        } else {
+            document.getElementById('predictionResult').innerText = `已輸入 ${history.length} 局，至少輸入 10 局後開始預測。`;
+        }
     }
 
-    // 更新棋盤顯示
     function updateGrid() {
         const cells = document.querySelectorAll('.result-circle');
-        cells.forEach(cell => cell.className = 'result-circle'); // 重設所有格子顏色
-        cells.forEach(cell => cell.innerText = ''); // 清空所有格子文字
+        cells.forEach(cell => {
+            cell.className = 'result-circle';
+            cell.innerText = '';
+        });
 
         history.forEach((result, index) => {
             const cell = cells[getVerticalIndex(index)];
@@ -199,38 +202,45 @@
         });
     }
 
-    // 將一維的索引轉為直列順序的索引
     function getVerticalIndex(index) {
         const col = Math.floor(index / maxRows);
         const row = index % maxRows;
         return row * maxCols + col;
     }
 
-    // 根據歷史結果推薦下一步下注
     function updatePrediction() {
         let zhuangCount = history.filter(item => item === '莊').length;
         let xianCount = history.filter(item => item === '閒').length;
 
-        let recommendation;
+        let recommendation, winProbability, betAmount;
+
         if (zhuangCount > xianCount) {
-            recommendation = "建議下注：閒";
+            recommendation = "閒";
+            winProbability = (xianCount / history.length * 100).toFixed(2);
         } else if (xianCount > zhuangCount) {
-            recommendation = "建議下注：莊";
+            recommendation = "莊";
+            winProbability = (zhuangCount / history.length * 100).toFixed(2);
         } else {
-            recommendation = "建議下注：隨機";
+            recommendation = "隨機";
+            winProbability = "50.00";
         }
 
-        document.getElementById('predictionResult').innerText = recommendation;
+        const capitalSelect = document.getElementById('capital').value;
+        let capital = capitalSelect === 'custom' ? parseInt(document.getElementById('customCapital').value) : parseInt(capitalSelect);
+        betAmount = capital ? Math.round(capital * 0.05) : "未設置本金"; // 建議下注金額為本金的5%
+
+        document.getElementById('predictionResult').innerText = 
+            `預測結果：${recommendation}\n` +
+            `預估勝率：${winProbability}%\n` +
+            `建議下注金額：$${betAmount}`;
     }
 
-    // 重置歷史結果
     function resetHistory() {
         history = [];
         updateGrid();
         document.getElementById('predictionResult').innerText = "已重置歷史結果，請重新輸入...";
     }
 
-    // 初始化6x6格子
     initializeGrid();
 </script>
 
