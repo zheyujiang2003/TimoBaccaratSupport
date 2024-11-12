@@ -114,22 +114,22 @@
             gap: 15px;
         }
 
-        .history-display, .result-display {
+        .history-display, .result-display, .prediction-match-display {
             display: grid;
             grid-template-columns: repeat(6, 1fr);
             gap: 8px;
-            padding: 15px;
+            padding: 10px;
             border-radius: 10px;
             background-color: #fafafa;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
         }
 
-        .result-circle {
+        .small-circle {
             display: flex;
             justify-content: center;
             align-items: center;
-            width: 45px;
-            height: 45px;
+            width: 35px;
+            height: 35px;
             border-radius: 50%;
             color: white;
             font-weight: bold;
@@ -137,10 +137,27 @@
             transition: transform 0.2s ease;
         }
 
-        .result-circle.zhuang { background-color: #d9534f; }
-        .result-circle.xian { background-color: #5bc0de; }
-        .result-circle.he { background-color: #5cb85c; }
-        .result-circle:hover { transform: scale(1.1); }
+        .small-circle.zhuang { background-color: #d9534f; }
+        .small-circle.xian { background-color: #5bc0de; }
+        .small-circle.he { background-color: #5cb85c; }
+        .small-circle:hover { transform: scale(1.1); }
+
+        .match-circle {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            font-weight: bold;
+            font-size: 1em;
+            background-color: #eee;
+            color: #333;
+        }
+
+        .match-circle.win { color: #28a745; }
+        .match-circle.lose { color: #dc3545; }
+        .match-circle.draw { color: #555; }
     </style>
 </head>
 <body>
@@ -166,8 +183,7 @@
 
         <div class="expectation">
             <strong>莊閒和期望值：</strong>
-            <div>莊：50%</div>
-            <div>閒：50%</div>
+            <div id="expectationValues">莊：50% 閒：50%</div>
             <div id="predictionResult">預測結果：等待輸入...</div>
         </div>
     </div>
@@ -177,15 +193,16 @@
         <div class="history-display" id="historyDisplay"></div>
 
         <h2>勝負結果紀錄區</h2>
-        <div class="result-display" id="resultDisplay"></div>
+        <div class="prediction-match-display" id="predictionMatchDisplay"></div>
     </div>
 </div>
 
 <script>
     const history = [];
     const results = [];
+    const predictions = [];
     const historyDisplay = document.getElementById('historyDisplay');
-    const resultDisplay = document.getElementById('resultDisplay');
+    const predictionMatchDisplay = document.getElementById('predictionMatchDisplay');
 
     function calculateResult() {
         const playerInput = document.getElementById('player').value.padEnd(3, '0');
@@ -223,6 +240,7 @@
         updateHistoryDisplay();
         updateResultDisplay();
         updatePrediction();
+        updateExpectation();
 
         clearInputs();
     }
@@ -236,20 +254,30 @@
         historyDisplay.innerHTML = "";
         history.forEach(item => {
             const resultCircle = document.createElement("div");
-            resultCircle.className = "result-circle " + (item.playerTotal > item.bankerTotal ? "xian" : item.playerTotal < item.bankerTotal ? "zhuang" : "he");
+            resultCircle.className = "small-circle " + (item.playerTotal > item.bankerTotal ? "xian" : item.playerTotal < item.bankerTotal ? "zhuang" : "he");
             resultCircle.innerText = item.playerTotal > item.bankerTotal ? "閒" : item.playerTotal < item.bankerTotal ? "莊" : "和";
             historyDisplay.appendChild(resultCircle);
         });
     }
 
     function updateResultDisplay() {
-        resultDisplay.innerHTML = "";
-        results.forEach(result => {
-            const resultCircle = document.createElement("div");
-            resultCircle.className = "result-circle " + (result === "閒" ? "xian" : result === "莊" ? "zhuang" : "he");
-            resultCircle.innerText = result;
-            resultDisplay.appendChild(resultCircle);
-        });
+        const currentResult = results[results.length - 1];
+        const lastPrediction = predictions.length > 0 ? predictions[predictions.length - 1] : null;
+
+        let matchResult = "";
+        if (lastPrediction) {
+            if (currentResult === lastPrediction) {
+                matchResult = "勝";
+            } else if (currentResult === "和") {
+                matchResult = "和";
+            } else {
+                matchResult = "負";
+            }
+            const matchCircle = document.createElement("div");
+            matchCircle.className = "match-circle " + (matchResult === "勝" ? "win" : matchResult === "負" ? "lose" : "draw");
+            matchCircle.innerText = matchResult;
+            predictionMatchDisplay.appendChild(matchCircle);
+        }
     }
 
     function updatePrediction() {
@@ -258,9 +286,21 @@
             const xianCount = recentResults.filter(r => r === "閒").length;
             const zhuangCount = recentResults.filter(r => r === "莊").length;
 
-            const prediction = xianCount > zhuangCount ? "預測結果：閒" : zhuangCount > xianCount ? "預測結果：莊" : "預測結果：無法預測";
-            document.getElementById("predictionResult").innerText = prediction;
+            const prediction = xianCount > zhuangCount ? "閒" : zhuangCount > xianCount ? "莊" : "建議看一把";
+            document.getElementById("predictionResult").innerText = "預測結果：" + prediction;
+            if (prediction !== "建議看一把") predictions.push(prediction);
         }
+    }
+
+    function updateExpectation() {
+        const zhuangCount = results.filter(r => r === "莊").length;
+        const xianCount = results.filter(r => r === "閒").length;
+        const total = zhuangCount + xianCount;
+
+        const zhuangPercent = total > 0 ? ((zhuangCount / total) * 100).toFixed(2) : 50;
+        const xianPercent = total > 0 ? ((xianCount / total) * 100).toFixed(2) : 50;
+
+        document.getElementById("expectationValues").innerText = `莊：${zhuangPercent}% 閒：${xianPercent}%`;
     }
 
     function clearAll() {
@@ -268,9 +308,11 @@
         document.getElementById('banker').value = "";
         history.length = 0;
         results.length = 0;
+        predictions.length = 0;
         updateHistoryDisplay();
-        updateResultDisplay();
+        predictionMatchDisplay.innerHTML = "";
         document.getElementById("predictionResult").innerText = "預測結果：等待輸入...";
+        document.getElementById("expectationValues").innerText = "莊：50% 閒：50%";
     }
 </script>
 
