@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>百家樂計算器</title>
     <style>
-        * { box-sizing: border-box; }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
         body { font-family: Arial, sans-serif; background-color: #f4f4f9; display: flex; flex-direction: column; align-items: center; padding: 20px; color: #333; }
         h1 { font-size: 2em; margin-bottom: 20px; color: #333; text-shadow: 1px 1px 4px rgba(0,0,0,0.1); }
         
@@ -199,6 +199,13 @@
         updateHistoryDisplay();
         updateResultDisplay();
         updatePrediction();
+        
+        // 自動清除輸入框
+        clearInputs();
+    }
+
+    function clearInputs() {
+        document.querySelectorAll("input[type='number']").forEach(input => input.value = "");
     }
 
     function updateHistoryDisplay() {
