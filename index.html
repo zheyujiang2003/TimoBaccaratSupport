@@ -12,7 +12,8 @@
             font-style: normal;
         }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; }
+        /* 全局設置取消粗體 */
+        * { box-sizing: border-box; margin: 0; padding: 0; font-weight: normal; }
         body, button, select {
             font-family: 'CustomFont', serif;
             background-color: #D3D3D3;
@@ -41,62 +42,6 @@
             align-items: center;
         }
 
-        /* 橫屏模式針對手機進行優化 */
-        @media (orientation: landscape) and (max-width: 900px) {
-            .container {
-                flex-direction: row;
-                justify-content: space-between;
-                width: 95%;
-                gap: 20px;
-            }
-            .panel {
-                width: 48%;
-                padding: 20px;
-                border-radius: 10px;
-                box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
-                margin: 0;
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-            }
-            .social-links.desktop {
-                display: flex;
-                width: 100%;
-                justify-content: center;
-                margin-top: 10px;
-                padding-top: 10px;
-                border-top: 1px solid #ddd;
-            }
-            .social-links.mobile {
-                display: none;
-            }
-            /* 團隊資訊樣式優化 */
-            .team-info {
-                font-size: 1.4em;
-                color: #555;
-                margin-top: 10px;
-                white-space: nowrap;
-            }
-        }
-
-        /* 直屏模式包括手機豎屏 */
-        @media (orientation: portrait), (min-width: 901px) {
-            .social-links.desktop {
-                display: none;
-            }
-            .social-links.mobile {
-                display: flex;
-                gap: 15px;
-                justify-content: center;
-                margin-top: 15px;
-            }
-            .team-info {
-                font-size: 1.2em;
-                color: #555;
-                margin: 20px 0;
-            }
-        }
-
         .panel {
             width: 100%;
             padding: 15px;
@@ -107,17 +52,20 @@
             display: flex;
             flex-direction: column;
             align-items: center;
+            gap: 15px; /* 垂直間距 */
         }
 
         .input-group {
             margin-bottom: 10px;
             width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
         }
 
         label {
             font-size: 1em;
             color: #333;
-            margin-bottom: 5px;
         }
 
         input[type="text"] {
@@ -156,7 +104,6 @@
         select {
             background-color: #333333;
             color: #ffffff;
-            text-align: left;
             padding-left: 8px;
             -moz-text-align-last: center;
         }
@@ -243,6 +190,42 @@
         .social-links .youtube { background-image: url('https://upload.wikimedia.org/wikipedia/commons/0/09/YouTube_full-color_icon_%282017%29.svg'); }
         .social-links .instagram { background-image: url('https://upload.wikimedia.org/wikipedia/commons/a/a5/Instagram_icon.png'); }
         .social-links .line { background-image: url('https://upload.wikimedia.org/wikipedia/commons/4/41/LINE_logo.svg'); }
+
+        /* 手機橫屏模式 */
+        @media (orientation: landscape) and (max-width: 900px) {
+            .container {
+                flex-direction: row;
+                justify-content: space-between;
+                width: 98%; /* 貼合屏幕邊緣 */
+                gap: 20px;
+            }
+            .panel {
+                width: 48%;
+                padding: 20px;
+                border-radius: 10px;
+                box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+                margin: 0;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+            }
+            .team-info {
+                font-size: 1.4em;
+                color: #555;
+                margin-top: 10px;
+                white-space: nowrap;
+            }
+        }
+
+        /* 電腦和平板保持原始布局 */
+        @media (min-width: 901px) {
+            .container {
+                flex-direction: column;
+                gap: 20px;
+                max-width: 600px;
+                padding: 20px;
+            }
+        }
     </style>
 </head>
 <body>
