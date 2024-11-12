@@ -216,10 +216,10 @@
 
         if (zhuangCount > xianCount) {
             recommendation = "閒";
-            winProbability = (xianCount / history.length * 100).toFixed(2);
+            winProbability = ((xianCount / history.length) * 100).toFixed(2);
         } else if (xianCount > zhuangCount) {
             recommendation = "莊";
-            winProbability = (zhuangCount / history.length * 100).toFixed(2);
+            winProbability = ((zhuangCount / history.length) * 100).toFixed(2);
         } else {
             recommendation = "隨機";
             winProbability = "50.00";
