@@ -191,7 +191,6 @@
         const playerInput = document.getElementById('player').value.padEnd(3, '0');
         const bankerInput = document.getElementById('banker').value.padEnd(3, '0');
 
-        // 確保輸入的值都是數字
         if (isNaN(playerInput) || isNaN(bankerInput) || playerInput.length !== 3 || bankerInput.length !== 3) {
             alert("請確保輸入的牌點數為三位數字，無補牌時請輸入0。");
             return;
@@ -225,7 +224,6 @@
         updateResultDisplay();
         updatePrediction();
 
-        // 自動清除輸入框
         clearInputs();
     }
 
