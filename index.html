@@ -224,13 +224,17 @@
             return;
         }
 
+        // 計算莊閒的點數
+        const playerPoints = (parseInt(playerInput[0]) + parseInt(playerInput[1]) + parseInt(playerInput[2])) % 10;
+        const bankerPoints = (parseInt(bankerInput[0]) + parseInt(bankerInput[1]) + parseInt(bankerInput[2])) % 10;
+
         // 計算 CP 值
         const playerCP = cardToCP(playerInput[0]) + cardToCP(playerInput[1]) + cardToCP(playerInput[2]);
         const bankerCP = cardToCP(bankerInput[0]) + cardToCP(bankerInput[1]) + cardToCP(bankerInput[2]);
 
         // 獲取 AP 值
-        const playerAP = apMap[Math.abs(playerCP)] || 0.1;
-        const bankerAP = apMap[Math.abs(bankerCP)] || 0.1;
+        const playerAP = apMap[playerPoints] || 0.1;
+        const bankerAP = apMap[bankerPoints] || 0.1;
 
         // 計算優勢
         const playerAdvantage = playerCP * playerAP;
