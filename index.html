@@ -29,7 +29,7 @@
             margin-bottom: 20px; 
             color: #333; 
             text-align: center;
-            font-weight: 900;
+            font-weight: normal;
         }
         
         .container {
@@ -47,7 +47,7 @@
         }
 
         /* 自適應左右佈局 */
-        @media (min-width: 768px) and (orientation: landscape) {
+        @media (min-width: 768px) {
             .container {
                 flex-direction: row;
                 justify-content: space-between;
@@ -201,6 +201,16 @@
         .social-links .youtube { background-image: url('https://upload.wikimedia.org/wikipedia/commons/0/09/YouTube_full-color_icon_%282017%29.svg'); }
         .social-links .instagram { background-image: url('https://upload.wikimedia.org/wikipedia/commons/a/a5/Instagram_icon.png'); }
         .social-links .line { background-image: url('https://upload.wikimedia.org/wikipedia/commons/4/41/LINE_logo.svg'); }
+
+        /* 桌面和平板：社交按鈕放在輸入區內的按鈕下方 */
+        @media (min-width: 768px) {
+            .social-links.desktop {
+                margin-top: 0;
+                padding-top: 15px;
+                border-top: 1px solid #ddd;
+                width: 100%;
+            }
+        }
     </style>
 </head>
 <body>
@@ -220,6 +230,13 @@
         </div>
         <button class="calculate-btn" onclick="calculateResult()">計算結果</button>
         <button class="clear-btn" onclick="clearAll()">消除全部</button>
+
+        <!-- 社交按鈕放置於此處，確保在輸入區內顯示 -->
+        <div class="social-links desktop">
+            <a href="https://youtube.com/channel/UCj1P2Tt82JtrbhVXui8DXcg?si=V9NidILTpYH3dTZx" target="_blank" class="youtube"></a>
+            <a href="https://www.instagram.com/gamble_couple666/profilecard/?igsh=OGt1ZGJndHNiMTB4" target="_blank" class="instagram"></a>
+            <a href="https://lin.ee/ivW2LRm" target="_blank" class="line"></a>
+        </div>
     </div>
 
     <div class="panel">
@@ -247,7 +264,8 @@
         </div>
     </div>
 
-    <div class="social-links">
+    <!-- 手機模式下顯示的社交按鈕位置 -->
+    <div class="social-links mobile">
         <a href="https://youtube.com/channel/UCj1P2Tt82JtrbhVXui8DXcg?si=V9NidILTpYH3dTZx" target="_blank" class="youtube"></a>
         <a href="https://www.instagram.com/gamble_couple666/profilecard/?igsh=OGt1ZGJndHNiMTB4" target="_blank" class="instagram"></a>
         <a href="https://lin.ee/ivW2LRm" target="_blank" class="line"></a>
