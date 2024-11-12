@@ -151,6 +151,12 @@
             border: 1px solid #ddd;
         }
 
+        @media (min-width: 768px) and (orientation: landscape) {
+            .grid-container {
+                grid-template-columns: repeat(12, 1fr); /* 提升橫屏顯示更多格子 */
+            }
+        }
+
         .grid-item {
             display: flex;
             justify-content: center;
@@ -200,7 +206,7 @@
 
         .social-links .youtube { 
             background-image: url('https://upload.wikimedia.org/wikipedia/commons/0/09/YouTube_full-color_icon_%282017%29.svg'); 
-            background-position: -10px center; /* 向左偏移更多 */
+            background-position: -10px center;
             background-size: cover;
         }
         .social-links .instagram { background-image: url('https://upload.wikimedia.org/wikipedia/commons/a/a5/Instagram_icon.png'); }
@@ -242,7 +248,6 @@
         </div>
 
         <div class="grid-container" id="historyDisplay">
-            <!-- 6x6 的棋盤格子樣式 -->
             <script>
                 for (let i = 0; i < 36; i++) {
                     document.write('<div class="grid-item"></div>');
