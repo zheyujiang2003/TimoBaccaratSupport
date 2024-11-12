@@ -37,7 +37,7 @@
             padding: 20px;
             overflow: hidden;
             align-items: center;
-            min-height: 900px; /* 增加高度 */
+            min-height: 1000px; /* 增加高度 */
         }
 
         .row {
@@ -81,7 +81,7 @@
             box-shadow: 0 0 0 4px rgba(0, 113, 227, 0.15);
         }
 
-        button {
+        button, select {
             width: 100%;
             padding: 10px;
             font-size: 1em;
@@ -93,10 +93,12 @@
             font-weight: 500;
             margin-top: 10px;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            color: black;
+            background-color: #0071e3;
         }
 
-        .calculate-btn { background-color: #0071e3; }
-        .calculate-btn:hover { background-color: #005bb5; }
+        button.calculate-btn { background-color: #0071e3; color: white; }
+        button.calculate-btn:hover { background-color: #005bb5; }
 
         .clear-btn { background-color: #d9534f; }
         .clear-btn:hover { background-color: #c9302c; }
@@ -193,7 +195,12 @@
         </div>
 
         <div class="panel">
-            <h2>預測區</h2>
+            <h2>公式選擇</h2>
+            <select id="formulaSelect" onchange="checkFormula()">
+                <option value="AP">AP 權重模式</option>
+                <option value="ThreePoint">三點叉公式</option>
+            </select>
+
             <div class="expectation">
                 <strong>優勢判斷：</strong>
                 <div id="predictionResult">等待輸入...</div>
@@ -241,9 +248,18 @@
     const history = [];
     const predictions = []; // 用於記錄每次的預測
 
+    // 檢查選擇的公式，並在選擇三點叉公式時顯示提示
+    function checkFormula() {
+        const formula = document.getElementById("formulaSelect").value;
+        if (formula === "ThreePoint") {
+            alert("請選擇房間30局內為優，以提高三點叉公式的預測效果！");
+        }
+    }
+
     function calculateResult() {
         const playerInput = document.getElementById('player').value.padEnd(3, '0');
         const bankerInput = document.getElementById('banker').value.padEnd(3, '0');
+        const formula = document.getElementById("formulaSelect").value;
 
         // 確保輸入為合法的數字或字母
         if (!/^[0-9AJQK]+$/.test(playerInput) || !/^[0-9AJQK]+$/.test(bankerInput) || playerInput.length !== 3 || bankerInput.length !== 3) {
@@ -255,54 +271,59 @@
         const playerPoints = (parseInt(playerInput[0]) + parseInt(playerInput[1]) + parseInt(playerInput[2])) % 10;
         const bankerPoints = (parseInt(bankerInput[0]) + parseInt(bankerInput[1]) + parseInt(bankerInput[2])) % 10;
 
-        // 判斷獲勝方
-        let actualOutcome;
-        if (playerPoints > bankerPoints) {
-            actualOutcome = "閒";
-        } else if (bankerPoints > playerPoints) {
-            actualOutcome = "莊";
-        } else {
-            actualOutcome = "和";
-        }
+        let predictedOutcome, recommendation;
 
-        // 計算 CP 值
-        const playerCP = cardToCP(playerInput[0]) + cardToCP(playerInput[1]) + cardToCP(playerInput[2]);
-        const bankerCP = cardToCP(bankerInput[0]) + cardToCP(bankerInput[1]) + cardToCP(bankerInput[2]);
+        if (formula === "AP") {
+            // AP 權重公式
+            const playerCP = cardToCP(playerInput[0]) + cardToCP(playerInput[1]) + cardToCP(playerInput[2]);
+            const bankerCP = cardToCP(bankerInput[0]) + cardToCP(bankerInput[1]) + cardToCP(bankerInput[2]);
 
-        // 獲取 AP 值
-        const playerAP = apMap[playerPoints] || 0.1;
-        const bankerAP = apMap[bankerPoints] || 0.1;
+            const playerAP = apMap[playerPoints] || 0.1;
+            const bankerAP = apMap[bankerPoints] || 0.1;
 
-        // 計算優勢
-        const playerAdvantage = playerCP * playerAP;
-        const bankerAdvantage = bankerCP * bankerAP;
+            const playerAdvantage = playerCP * playerAP;
+            const bankerAdvantage = bankerCP * bankerAP;
 
-        // 推薦下注
-        let recommendation;
-        let predictedOutcome;
+            if (playerAdvantage > bankerAdvantage) {
+                recommendation = "建議下注：閒家";
+                predictedOutcome = "閒";
+            } else if (bankerAdvantage > playerAdvantage) {
+                recommendation = "建議下注：莊家";
+                predictedOutcome = "莊";
+            } else {
+                recommendation = "建議看一把";
+                predictedOutcome = "看一把";
+            }
+        } else if (formula === "ThreePoint") {
+            // 三點叉公式
+            if (history.length > 0) {
+                const lastOutcome = history[history.length - 1];
+                const difference = Math.abs(playerPoints - bankerPoints);
 
-        if (playerAdvantage > bankerAdvantage) {
-            recommendation = "建議下注：閒家";
-            predictedOutcome = "閒";
-        } else if (bankerAdvantage > playerAdvantage) {
-            recommendation = "建議下注：莊家";
-            predictedOutcome = "莊";
-        } else {
-            recommendation = "建議看一把";
-            predictedOutcome = "看一把";
+                if (difference <= 3) {
+                    recommendation = `推薦下注：${lastOutcome === "莊" ? "閒" : "莊"}`;
+                    predictedOutcome = lastOutcome === "莊" ? "閒" : "莊";
+                } else {
+                    recommendation = `推薦下注：${lastOutcome}`;
+                    predictedOutcome = lastOutcome;
+                }
+            } else {
+                recommendation = "等待輸入結果...";
+                predictedOutcome = "看一把";
+            }
         }
 
         document.getElementById("predictionResult").innerText = recommendation;
         predictions.push(predictedOutcome); // 記錄每次預測
 
         // 儲存結果到歷史記錄並展示
-        history.push(actualOutcome);
+        history.push(predictedOutcome === "看一把" ? "" : predictedOutcome);
         updateHistoryDisplay();
 
         // 檢查預測準確率（從第二局開始比較）
-        if (history.length > 1 && actualOutcome !== "和" && predictedOutcome !== "看一把") {
+        if (history.length > 1 && predictedOutcome !== "看一把") {
             totalPredictions++;
-            if (predictions[history.length - 2] === actualOutcome) {
+            if (predictions[history.length - 2] === history[history.length - 1]) {
                 correctPredictions++;
             }
             updateAccuracy();
