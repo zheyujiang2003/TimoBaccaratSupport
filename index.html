@@ -69,26 +69,26 @@
         .history-button.reset { background-color: gray; }
 
         .history-display {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
+            display: grid;
+            grid-template-columns: repeat(6, minmax(0, 1fr));
+            gap: 5px;
             padding: 10px;
             border: 1px solid #ddd;
             border-radius: 10px;
             background-color: #f9f9f9;
-            max-width: 600px;
+            max-width: 100%;
             margin-top: 10px;
         }
         .result-circle {
             display: flex;
             justify-content: center;
             align-items: center;
-            width: 40px;
-            height: 40px;
+            width: 100%;
+            aspect-ratio: 1;
             border-radius: 50%;
             color: white;
             font-weight: bold;
-            font-size: 16px;
+            font-size: 1em;
         }
         .result-circle.zhuang { background-color: red; }
         .result-circle.xian { background-color: blue; }
@@ -127,7 +127,7 @@
         <h2>預測結果</h2>
         <div id="predictionResult" class="result">請輸入歷史結果...</div>
         <div class="history-display" id="historyDisplay">
-            <!-- 動態顯示歷史結果的圓形標記 -->
+            <!-- 動態顯示歷史結果的圓形標記，6x6 格子佈局 -->
         </div>
     </div>
 
@@ -186,11 +186,13 @@
         displayHistory();
     }
 
-    // 動態更新歷史結果顯示
+    // 動態更新6x6歷史結果顯示
     function displayHistory() {
         const historyDisplay = document.getElementById('historyDisplay');
         historyDisplay.innerHTML = ''; // 清空歷史顯示區
-        history.forEach(item => {
+
+        // 顯示最多36個歷史記錄
+        history.slice(-36).forEach(item => {
             const circle = document.createElement('div');
             circle.className = `result-circle ${item === '莊' ? 'zhuang' : item === '閒' ? 'xian' : 'he'}`;
             circle.innerText = item;
