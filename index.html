@@ -47,7 +47,7 @@
         }
 
         /* 自適應左右佈局 */
-        @media (min-width: 768px) {
+        @media (min-width: 768px) and (orientation: landscape) {
             .container {
                 flex-direction: row;
                 justify-content: space-between;
@@ -55,6 +55,27 @@
             }
             .panel {
                 width: 48%;
+            }
+            /* 平板或桌面橫屏模式下，顯示社交按鈕在輸入區內 */
+            .social-links.desktop {
+                display: flex;
+                width: 100%;
+                margin-top: 10px;
+                padding-top: 15px;
+                border-top: 1px solid #ddd;
+            }
+        }
+
+        /* 垂直模式下不顯示輸入區內的社交按鈕 */
+        @media (max-width: 767px), (orientation: portrait) {
+            .social-links.desktop {
+                display: none;
+            }
+            .social-links.mobile {
+                display: flex;
+                gap: 15px;
+                justify-content: center;
+                margin-top: 15px;
             }
         }
 
@@ -180,7 +201,6 @@
             display: flex;
             gap: 15px;
             justify-content: center;
-            margin-top: 15px;
         }
 
         .social-links a {
@@ -201,16 +221,6 @@
         .social-links .youtube { background-image: url('https://upload.wikimedia.org/wikipedia/commons/0/09/YouTube_full-color_icon_%282017%29.svg'); }
         .social-links .instagram { background-image: url('https://upload.wikimedia.org/wikipedia/commons/a/a5/Instagram_icon.png'); }
         .social-links .line { background-image: url('https://upload.wikimedia.org/wikipedia/commons/4/41/LINE_logo.svg'); }
-
-        /* 桌面和平板：社交按鈕放在輸入區內的按鈕下方 */
-        @media (min-width: 768px) {
-            .social-links.desktop {
-                margin-top: 0;
-                padding-top: 15px;
-                border-top: 1px solid #ddd;
-                width: 100%;
-            }
-        }
     </style>
 </head>
 <body>
@@ -231,7 +241,7 @@
         <button class="calculate-btn" onclick="calculateResult()">計算結果</button>
         <button class="clear-btn" onclick="clearAll()">消除全部</button>
 
-        <!-- 社交按鈕放置於此處，確保在輸入區內顯示 -->
+        <!-- 橫屏模式的社交按鈕 -->
         <div class="social-links desktop">
             <a href="https://youtube.com/channel/UCj1P2Tt82JtrbhVXui8DXcg?si=V9NidILTpYH3dTZx" target="_blank" class="youtube"></a>
             <a href="https://www.instagram.com/gamble_couple666/profilecard/?igsh=OGt1ZGJndHNiMTB4" target="_blank" class="instagram"></a>
@@ -264,7 +274,7 @@
         </div>
     </div>
 
-    <!-- 手機模式下顯示的社交按鈕位置 -->
+    <!-- 直屏模式的社交按鈕 -->
     <div class="social-links mobile">
         <a href="https://youtube.com/channel/UCj1P2Tt82JtrbhVXui8DXcg?si=V9NidILTpYH3dTZx" target="_blank" class="youtube"></a>
         <a href="https://www.instagram.com/gamble_couple666/profilecard/?igsh=OGt1ZGJndHNiMTB4" target="_blank" class="instagram"></a>
