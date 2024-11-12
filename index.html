@@ -16,12 +16,16 @@
             padding: 20px;
             margin: 0;
         }
+        h1 {
+            font-size: 1.5em;
+            text-align: center;
+        }
         .container {
             display: flex;
             flex-direction: column;
             gap: 20px;
             width: 100%;
-            max-width: 400px;
+            max-width: 600px;
         }
         .settings, .prediction {
             padding: 20px;
@@ -63,20 +67,70 @@
         .history-button.xian { background-color: blue; }
         .history-button.he { background-color: green; }
         .history-button.reset { background-color: gray; }
-        .result {
-            font-size: 1.2em;
-            color: #333;
+
+        .history-display {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            background-color: #f9f9f9;
+            max-width: 600px;
             margin-top: 10px;
-            white-space: pre-line;
-            word-wrap: break-word;
+        }
+        .result-circle {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            color: white;
+            font-weight: bold;
+            font-size: 16px;
+        }
+        .result-circle.zhuang { background-color: red; }
+        .result-circle.xian { background-color: blue; }
+        .result-circle.he { background-color: green; }
+
+        /* 電腦橫式排版 */
+        @media (min-width: 768px) {
+            .container {
+                flex-direction: row;
+                justify-content: center;
+                align-items: flex-start;
+            }
+            .settings, .prediction {
+                max-width: 300px;
+            }
+        }
+
+        /* 手機直式排版 */
+        @media (max-width: 767px) {
+            .container {
+                flex-direction: column-reverse;
+            }
+            .history-container {
+                flex-direction: column;
+            }
         }
     </style>
 </head>
 <body>
 
-<h1 style="font-size: 1.5em; text-align: center;">Timo百家輔助</h1>
+<h1>Timo百家輔助</h1>
 
 <div class="container">
+    <!-- 預測結果區域 -->
+    <div class="prediction">
+        <h2>預測結果</h2>
+        <div id="predictionResult" class="result">請輸入歷史結果...</div>
+        <div class="history-display" id="historyDisplay">
+            <!-- 動態顯示歷史結果的圓形標記 -->
+        </div>
+    </div>
+
     <!-- 設置區域 -->
     <div class="settings">
         <h2>設定</h2>
@@ -96,12 +150,6 @@
             <option value="tianmen">天門</option>
             <option value="evenbet">均注</option>
         </select>
-    </div>
-
-    <!-- 預測結果區域 -->
-    <div class="prediction">
-        <h2>預測結果</h2>
-        <div id="predictionResult" class="result">請輸入歷史結果...</div>
     </div>
 </div>
 
@@ -129,11 +177,25 @@
     function addHistory(result) {
         history.push(result);
         updatePrediction();
+        displayHistory();
     }
 
     function resetHistory() {
         history = [];
         document.getElementById('predictionResult').innerText = "已重置歷史結果，請重新輸入...";
+        displayHistory();
+    }
+
+    // 動態更新歷史結果顯示
+    function displayHistory() {
+        const historyDisplay = document.getElementById('historyDisplay');
+        historyDisplay.innerHTML = ''; // 清空歷史顯示區
+        history.forEach(item => {
+            const circle = document.createElement('div');
+            circle.className = `result-circle ${item === '莊' ? 'zhuang' : item === '閒' ? 'xian' : 'he'}`;
+            circle.innerText = item;
+            historyDisplay.appendChild(circle);
+        });
     }
 
     // 簡單算法：根據歷史資料和選擇的打法，建議配注
