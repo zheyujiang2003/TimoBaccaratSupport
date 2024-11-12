@@ -12,7 +12,6 @@
             font-style: normal;
         }
 
-        /* 全局設置取消粗體 */
         * { box-sizing: border-box; margin: 0; padding: 0; font-weight: normal; }
         body, button, select {
             font-family: 'CustomFont', serif;
@@ -52,7 +51,7 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 15px; /* 垂直間距 */
+            gap: 15px;
         }
 
         .input-group {
@@ -196,7 +195,7 @@
             .container {
                 flex-direction: row;
                 justify-content: space-between;
-                width: 98%; /* 貼合屏幕邊緣 */
+                width: 98%;
                 gap: 20px;
             }
             .panel {
@@ -246,7 +245,6 @@
         <button class="calculate-btn" onclick="calculateResult()">計算結果</button>
         <button class="clear-btn" onclick="clearAll()">消除全部</button>
 
-        <!-- 單一社交按鈕和團隊訊息 -->
         <div class="social-links">
             <a href="https://youtube.com/channel/UCj1P2Tt82JtrbhVXui8DXcg?si=V9NidILTpYH3dTZx" target="_blank" class="youtube"></a>
             <a href="https://www.instagram.com/gamble_couple666/profilecard/?igsh=OGt1ZGJndHNiMTB4" target="_blank" class="instagram"></a>
@@ -271,7 +269,6 @@
         </div>
 
         <div class="grid-container" id="historyDisplay">
-            <!-- 6x6 的棋盤格子樣式 -->
             <script>
                 for (let i = 0; i < 36; i++) {
                     document.write('<div class="grid-item"></div>');
@@ -282,7 +279,45 @@
 </div>
 
 <script>
-// 其他功能代碼保持不變
+    let totalPredictions = 0;
+    let correctPredictions = 0;
+    const history = [];
+
+    function calculateResult() {
+        const playerInput = document.getElementById('player').value;
+        const bankerInput = document.getElementById('banker').value;
+
+        if (!playerInput || !bankerInput || playerInput.length !== 3 || bankerInput.length !== 3) {
+            alert("請輸入正確的三位數牌點數");
+            return;
+        }
+
+        const playerPoints = (parseInt(playerInput[0]) + parseInt(playerInput[1]) + parseInt(playerInput[2])) % 10;
+        const bankerPoints = (parseInt(bankerInput[0]) + parseInt(bankerInput[1]) + parseInt(bankerInput[2])) % 10;
+
+        const outcome = playerPoints > bankerPoints ? "閒" : bankerPoints > playerPoints ? "莊" : "和";
+        document.getElementById("predictionResult").innerText = `結果：${outcome}`;
+        
+        // 更新準確率
+        totalPredictions++;
+        if (outcome === "莊") correctPredictions++;
+        updateAccuracy();
+    }
+
+    function updateAccuracy() {
+        const accuracyRate = ((correctPredictions / totalPredictions) * 100).toFixed(2);
+        document.getElementById("accuracyRate").innerText = `${accuracyRate}%`;
+    }
+
+    function clearAll() {
+        document.getElementById("player").value = "";
+        document.getElementById("banker").value = "";
+        document.getElementById("predictionResult").innerText = "等待輸入...";
+        document.getElementById("accuracyRate").innerText = "100%";
+        totalPredictions = 0;
+        correctPredictions = 0;
+        history.length = 0;
+    }
 </script>
 
 </body>
