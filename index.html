@@ -7,22 +7,20 @@
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { 
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; 
-            background-color: #f5f5f7; 
+            font-family: 'Arial', sans-serif;
+            background-color: #f0f2f5; 
             color: #333; 
             display: flex; 
             flex-direction: column;
             align-items: center;
             padding: 20px;
-            text-rendering: optimizeLegibility;
         }
         h1 { 
-            font-size: 2em; 
+            font-size: 2.2em; 
             margin-bottom: 20px; 
             color: #333; 
             text-align: center;
-            font-weight: 600;
-            letter-spacing: -0.5px;
+            font-weight: 700;
         }
         
         .container {
@@ -34,7 +32,7 @@
             background: #fff;
             border-radius: 15px;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-            padding: 20px;
+            padding: 25px;
             overflow: hidden;
             align-items: center;
             min-height: 1000px;
@@ -50,7 +48,10 @@
 
         .panel {
             flex: 1;
-            padding: 10px;
+            padding: 15px;
+            background-color: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
         }
 
         .input-group {
@@ -58,19 +59,19 @@
         }
 
         label {
-            font-size: 0.9em;
-            color: #555;
-            font-weight: 500;
+            font-size: 1em;
+            color: #333;
+            font-weight: 600;
             display: block;
             margin-bottom: 5px;
         }
 
         input[type="text"] {
             width: 100%;
-            padding: 10px;
+            padding: 12px;
             font-size: 1em;
             border: 1px solid #ddd;
-            border-radius: 10px;
+            border-radius: 8px;
             outline: none;
             transition: all 0.3s ease;
             font-weight: 400;
@@ -83,21 +84,18 @@
 
         button, select {
             width: 100%;
-            padding: 10px;
+            padding: 12px;
             font-size: 1em;
             color: white;
             border: none;
-            border-radius: 10px;
+            border-radius: 8px;
             cursor: pointer;
             transition: all 0.3s ease;
-            font-weight: 500;
+            font-weight: 600;
             margin-top: 10px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-            color: black;
-            background-color: #0071e3;
         }
 
-        button.calculate-btn { background-color: #0071e3; color: white; }
+        button.calculate-btn { background-color: #0071e3; }
         button.calculate-btn:hover { background-color: #005bb5; }
 
         .clear-btn { background-color: #d9534f; }
@@ -116,7 +114,7 @@
         }
 
         .accuracy {
-            background-color: #e0f7fa;
+            background-color: #e7f4f7;
             color: #00796b;
         }
 
@@ -152,7 +150,7 @@
             display: flex;
             gap: 15px;
             justify-content: center;
-            margin-top: 20px;
+            margin-top: 15px;
         }
         .social-links a {
             width: 40px;
@@ -236,7 +234,8 @@
     let totalPredictions = 0;
     let correctPredictions = 0;
     const history = [];
-    const predictions = [];
+    const apPredictions = [];
+    const threePointPredictions = [];
 
     function calculateResult() {
         const playerInput = document.getElementById('player').value.padEnd(3, '0');
@@ -258,6 +257,7 @@
             const bankerAP = {0: 0.5, 1: 0.4, 2: 0.3, 3: 0.3, 4: 0.1, 5: 0.2, 6: 0.3, 7: 0.3, 8: 0.5, 9: 0.1}[bankerPoints];
             predictedOutcome = playerAP > bankerAP ? "閒" : bankerAP > playerAP ? "莊" : "看一把";
             recommendation = predictedOutcome === "看一把" ? "建議看一把" : `建議下注：${predictedOutcome}`;
+            apPredictions.push(predictedOutcome);
         } else if (formula === "ThreePoint") {
             if (history.length > 0 && actualOutcome !== "和") {
                 const lastOutcome = history[history.length - 1];
@@ -268,20 +268,25 @@
                 recommendation = "等待輸入結果...";
                 predictedOutcome = "看一把";
             }
+            threePointPredictions.push(predictedOutcome);
         }
 
         document.getElementById("predictionResult").innerText = recommendation;
-        predictions.push(predictedOutcome);
         history.push(actualOutcome);
         updateHistoryDisplay();
 
-        if (history.length > 1 && predictedOutcome !== "看一把") {
+        if (formula === "AP" && history.length > 1 && predictedOutcome !== "看一把") {
             totalPredictions++;
-            if (predictions[history.length - 2] === actualOutcome) {
+            if (apPredictions[history.length - 2] === actualOutcome) {
                 correctPredictions++;
             }
-            updateAccuracy();
+        } else if (formula === "ThreePoint" && history.length > 1 && predictedOutcome !== "看一把") {
+            totalPredictions++;
+            if (threePointPredictions[history.length - 2] === actualOutcome) {
+                correctPredictions++;
+            }
         }
+        updateAccuracy();
         clearInputs();
     }
 
@@ -313,7 +318,8 @@
         totalPredictions = 0;
         correctPredictions = 0;
         history.length = 0;
-        predictions.length = 0;
+        apPredictions.length = 0;
+        threePointPredictions.length = 0;
         updateHistoryDisplay();
     }
 </script>
