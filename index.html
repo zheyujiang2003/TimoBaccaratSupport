@@ -72,16 +72,6 @@
                 text-align: center;
                 min-height: 450px;
             }
-            .accuracy {
-                padding: 10px;
-                font-size: 0.9em;
-                background-color: #e7f4f7;
-                color: #00796b;
-                margin-top: 15px;
-                max-width: 180px;
-                transform: scale(0.9);
-                margin-bottom: 15px;
-            }
             .grid-container {
                 max-width: 240px;
             }
@@ -123,9 +113,6 @@
             }
             .grid-container {
                 margin: 15px auto;
-            }
-            .accuracy {
-                margin-bottom: 20px;
             }
         }
 
@@ -177,6 +164,9 @@
             background-color: #f0f0f0;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
             letter-spacing: 0.5px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
 
         button.calculate-btn { 
@@ -202,9 +192,12 @@
             box-shadow: inset 1px 1px 3px rgba(0,0,0,0.1);
             text-align-last: center;
             appearance: none; /* 隱藏默認箭頭 */
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
 
-        .prediction-result, .accuracy {
+        .prediction-result {
             padding: 15px;
             border-radius: 10px;
             background-color: #f9f9f9;
@@ -214,11 +207,6 @@
             margin-top: 10px;
             text-align: center;
             transition: all 0.3s ease;
-        }
-
-        .accuracy {
-            background-color: #e7f4f7;
-            color: #00796b;
         }
 
         .grid-container {
@@ -322,9 +310,6 @@
             <h2>AI說</h2>
             <div id="predictionResult">等待輸入...</div>
         </div>
-        <div class="accuracy" id="accuracyDisplay">
-            <div>目前預測準確率：<span id="accuracyRate">100%</span></div>
-        </div>
 
         <div class="grid-container" id="historyDisplay">
             <script>
@@ -343,22 +328,12 @@
 </div>
 
 <script>
-    let totalPredictions = 0;
-    let correctPredictions = 0;
-    const history = [];
-    let currentFormula = 'AP';
-    let pointDifferenceHistory = [];
-    let consecutiveWins = 0;
+    const AP_VALUES = {0: 0.5, 1: 0.4, 2: 0.3, 3: 0.3, 4: 0.1, 5: 0.2, 6: 0.3, 7: 0.3, 8: 0.5, 9: 0.1};
+    const CP_VALUES = {1: -5, 2: -4, 3: -3, 4: -2, 5: 1, 6: 2, 7: 3, 8: 4, 9: 5};
 
     function checkFormula() {
-        currentFormula = document.getElementById("formulaSelect").value;
-        if (["Size", "PointDifference", "TimoExclusive"].includes(currentFormula)) {
-            alert("本模式較不適合新手，將不展示預測準確率");
-            document.getElementById("accuracyDisplay").style.display = "none";
-        } else {
-            document.getElementById("accuracyDisplay").style.display = "block";
-        }
-        updateAccuracy();
+        const formula = document.getElementById("formulaSelect").value;
+        document.getElementById("predictionResult").innerText = "等待輸入...";
         updateHistoryDisplay();
     }
 
@@ -374,31 +349,32 @@
         const playerPoints = (parseInt(playerInput[0]) + parseInt(playerInput[1]) + parseInt(playerInput[2])) % 10;
         const bankerPoints = (parseInt(bankerInput[0]) + parseInt(bankerInput[1]) + parseInt(bankerInput[2])) % 10;
         let actualOutcome = playerPoints > bankerPoints ? "閒" : bankerPoints > playerPoints ? "莊" : "和";
-        let recommendation;
 
-        if (currentFormula === "TimoExclusive") {
-            // Implement Timo Exclusive Formula
-            if (history.length > 0 && history[history.length - 1].actual === actualOutcome) {
-                consecutiveWins++;
-            } else {
-                consecutiveWins = 1;
-            }
-            recommendation = consecutiveWins >= 3 ? `反向下注：${actualOutcome === "莊" ? "閒" : "莊"}` : `保持：${actualOutcome}`;
-        } else {
-            recommendation = "等待輸入...";
+        const playerCP = calculateCP(playerInput);
+        const bankerCP = calculateCP(bankerInput);
+        const playerAP = AP_VALUES[playerPoints];
+        const bankerAP = AP_VALUES[bankerPoints];
+        
+        const playerAdvantage = playerCP * playerAP;
+        const bankerAdvantage = bankerCP * bankerAP;
+
+        let recommendation = "看一把";
+        if (playerAdvantage > bankerAdvantage) {
+            recommendation = "推薦下閒";
+        } else if (bankerAdvantage > playerAdvantage) {
+            recommendation = "推薦下莊";
         }
 
         document.getElementById("predictionResult").innerText = recommendation;
-
-        history.push({ actual: actualOutcome, predicted: recommendation });
-        updateAccuracy();
         updateHistoryDisplay();
         clearInputs();
     }
 
-    function updateAccuracy() {
-        const accuracyRate = totalPredictions <= 1 ? 100 : ((correctPredictions / totalPredictions) * 100).toFixed(2);
-        document.getElementById("accuracyRate").innerText = `${accuracyRate}%`;
+    function calculateCP(cards) {
+        return Array.from(cards).reduce((sum, card) => {
+            const value = parseInt(card);
+            return sum + (CP_VALUES[value] || 0);
+        }, 0);
     }
 
     function updateHistoryDisplay() {
@@ -408,24 +384,6 @@
         items.forEach(item => {
             item.classList.remove('zhuang', 'xian', 'heju');
             item.innerText = '';
-        });
-
-        history.forEach((entry, index) => {
-            const row = index % 6;
-            const col = Math.floor(index / 6);
-            const targetIndex = row * 6 + col;
-            const targetItem = items[targetIndex];
-            
-            if (entry.actual === "莊") {
-                targetItem.classList.add("zhuang");
-                targetItem.innerText = "莊";
-            } else if (entry.actual === "閒") {
-                targetItem.classList.add("xian");
-                targetItem.innerText = "閒";
-            } else {
-                targetItem.classList.add("heju");
-                targetItem.innerText = "和";
-            }
         });
     }
 
@@ -438,14 +396,6 @@
         document.getElementById("player").value = "";
         document.getElementById("banker").value = "";
         document.getElementById("predictionResult").innerText = "等待輸入...";
-        document.getElementById("accuracyRate").innerText = "100%";
-
-        totalPredictions = 0;
-        correctPredictions = 0;
-        history.length = 0;
-        pointDifferenceHistory = [];
-        consecutiveWins = 0;
-
         updateHistoryDisplay();
     }
 </script>
