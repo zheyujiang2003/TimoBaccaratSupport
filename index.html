@@ -196,12 +196,13 @@
         select {
             background-color: #f0f0f0;
             color: #333;
-            text-align: center;
             padding-left: 10px;
             font-size: 1.1em;
+            text-align: center;
             -moz-text-align-last: center;
             -webkit-text-align-last: center;
             box-shadow: inset 1px 1px 3px rgba(0,0,0,0.1);
+            text-align-last: center; /* 確保在所有瀏覽器中置中 */
         }
 
         .prediction-result, .accuracy {
@@ -311,7 +312,7 @@
     <div class="panel">
         <h2>公式選擇</h2>
         <select id="formulaSelect" onchange="checkFormula()">
-            <option value="AP">AP 權重模式</option>
+            <option value="AP">AP 權重公式</option>
             <option value="ThreePoint">三點叉公式</option>
             <option value="Size">大小牌公式</option>
             <option value="PointDifference">點差公式</option>
@@ -398,7 +399,7 @@
 
             if (pointDifferenceHistory.length >= 3 && 
                 pointDifferenceHistory.slice(-3).every(value => value === Math.sign(pointDiffRate))) {
-                recommendation = "振盪期 - 看一把";
+                recommendation = "震盪期 看一把或反下";
             } else {
                 recommendation = pointDiffRate > 0 ? "推薦閒" : pointDiffRate < 0 ? "推薦莊" : "看一把";
             }
