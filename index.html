@@ -22,6 +22,7 @@
             align-items: center;
             padding: 20px;
             text-align: center;
+            overflow-x: hidden;
         }
         h1 { 
             font-size: 2.5em; 
@@ -49,21 +50,28 @@
             align-items: center;
         }
 
+        /* 橫屏模式設計 */
         @media (orientation: landscape) and (min-width: 500px) {
+            body {
+                padding: 0;
+            }
             .container {
                 flex-direction: row;
                 justify-content: space-between;
-                max-width: 1200px;
-                gap: 20px;
+                width: 100%;
+                max-width: none;
                 padding: 40px;
+                gap: 20px;
             }
             .panel {
-                width: 48%;
+                width: 50%;
                 background-color: #ffffff;
                 border-radius: 12px;
                 box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
                 padding: 25px;
-                position: relative;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
                 text-align: center;
             }
             .social-links.desktop {
@@ -86,6 +94,7 @@
             }
         }
 
+        /* 手機直屏設計 */
         @media (orientation: portrait), (max-width: 499px) {
             .social-links.desktop {
                 display: none;
