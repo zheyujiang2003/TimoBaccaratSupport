@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>Timo百家輔助</title>
     <style>
-        /* 字體設定 */
         @font-face {
             font-family: 'CustomFont';
             src: url('https://zheyujiang2003.github.io/Timo/Custom.ttf') format('truetype');
@@ -13,7 +12,6 @@
             font-style: normal;
         }
 
-        /* 基本樣式和顏色方案 */
         * { box-sizing: border-box; margin: 0; padding: 0; font-weight: normal; }
         body, button, select {
             font-family: 'CustomFont', serif;
@@ -39,7 +37,6 @@
             text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
         }
 
-        /* 容器和卡片樣式 */
         .container {
             display: flex;
             flex-direction: column;
@@ -52,11 +49,6 @@
             padding: 25px;
             overflow: hidden;
             align-items: center;
-            transition: all 0.3s ease;
-        }
-        .container:hover {
-            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
-            transform: translateY(-5px);
         }
 
         @media (orientation: landscape) and (min-width: 500px) {
@@ -87,8 +79,8 @@
                 color: #00796b;
                 margin-top: 15px;
                 max-width: 180px;
-                transform: scale(0.9); /* 等比例縮小10% */
-                margin-bottom: 15px; /* 保留與歷史展示區的適當間距 */
+                transform: scale(0.9);
+                margin-bottom: 15px;
             }
             .grid-container {
                 max-width: 240px;
@@ -137,7 +129,6 @@
             }
         }
 
-        /* 面板樣式 */
         .panel {
             width: 100%;
             padding: 15px;
@@ -146,10 +137,6 @@
             box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
             margin-bottom: 20px;
             text-align: center;
-            transition: all 0.3s ease;
-        }
-        .panel:hover {
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
         }
 
         .input-group {
@@ -171,21 +158,15 @@
             border: 1px solid #ddd;
             border-radius: 8px;
             outline: none;
-            transition: all 0.3s ease;
             text-align: center;
             box-shadow: inset 1px 1px 3px rgba(0,0,0,0.1);
-        }
-
-        input[type="text"]:focus {
-            border-color: #0071e3;
-            box-shadow: 0 0 5px rgba(0, 113, 227, 0.2);
         }
 
         button, select {
             width: 100%;
             padding: 12px;
             font-size: 1.1em;
-            color: #333; /* 修改文字顏色以提高可讀性 */
+            color: #333;
             border: none;
             border-radius: 8px;
             cursor: pointer;
@@ -193,22 +174,20 @@
             margin-top: 10px;
             font-family: 'CustomFont', serif;
             text-align: center;
-            background-color: #f0f0f0; /* 按鈕背景色 */
+            background-color: #f0f0f0;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
             letter-spacing: 0.5px;
         }
 
         button.calculate-btn { 
-            background-color: #e0e5ec; /* 修改按鈕背景色 */
-            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+            background-color: #e0e5ec;
         }
         button.calculate-btn:hover { 
             background-color: #d0d5dc; 
         }
 
         .clear-btn { 
-            background-color: #f3a5a5; /* 修改按鈕背景色 */
-            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+            background-color: #f3a5a5;
         }
         .clear-btn:hover { 
             background-color: #e49595; 
@@ -235,21 +214,12 @@
             text-align: center;
             transition: all 0.3s ease;
         }
-        .prediction-result:hover, .accuracy:hover {
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
-        }
-
-        .prediction-result h2 {
-            font-size: 1.3em;
-            color: #333;
-        }
 
         .accuracy {
             background-color: #e7f4f7;
             color: #00796b;
         }
 
-        /* 棋盤樣式 */
         .grid-container {
             display: grid;
             grid-template-columns: repeat(6, 1fr);
@@ -277,20 +247,16 @@
         .grid-item.zhuang {
             background-color: #ff4c4c;
             color: white;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.15);
         }
         .grid-item.xian {
             background-color: #4c8cff;
             color: white;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.15);
         }
         .grid-item.heju {
             background-color: #4CAF50;
             color: white;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.15);
         }
 
-        /* 社交按鈕樣式 */
         .social-links {
             display: flex;
             gap: 15px;
@@ -307,11 +273,6 @@
             border-radius: 50%;
             transition: transform 0.3s ease, box-shadow 0.3s ease;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-        }
-
-        .social-links a:hover {
-            transform: scale(1.1);
-            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.25);
         }
 
         .social-links .youtube { background-image: url('https://upload.wikimedia.org/wikipedia/commons/0/09/YouTube_full-color_icon_%282017%29.svg'); }
@@ -352,7 +313,7 @@
             <option value="AP">AP 權重模式</option>
             <option value="ThreePoint">三點叉公式</option>
             <option value="Size">大小牌公式</option>
-            <option value="Stability">安定值公式</option>
+            <option value="PointDifference">點差公式</option>
         </select>
 
         <div class="prediction-result">
@@ -387,7 +348,7 @@
 
     function checkFormula() {
         currentFormula = document.getElementById("formulaSelect").value;
-        if (currentFormula === "Size") {
+        if (currentFormula === "Size" || currentFormula === "PointDifference") {
             alert("本模式較不適合新手，將不展示預測準確率");
             document.getElementById("accuracyDisplay").style.display = "none";
         } else {
@@ -411,37 +372,30 @@
         let actualOutcome = playerPoints > bankerPoints ? "閒" : bankerPoints > playerPoints ? "莊" : "和";
         let predictedOutcome, recommendation;
 
-        if (currentFormula === "AP") {
-            const playerAP = {0: 0.5, 1: 0.4, 2: 0.3, 3: 0.3, 4: 0.1, 5: 0.2, 6: 0.3, 7: 0.3, 8: 0.5, 9: 0.1}[playerPoints];
-            const bankerAP = {0: 0.5, 1: 0.4, 2: 0.3, 3: 0.3, 4: 0.1, 5: 0.2, 6: 0.3, 7: 0.3, 8: 0.5, 9: 0.1}[bankerPoints];
-            predictedOutcome = playerAP > bankerAP ? "閒" : bankerAP > playerAP ? "莊" : "看一把";
-            recommendation = predictedOutcome === "看一把" ? "看一把" : `建議下注：${predictedOutcome}`;
-        } else if (currentFormula === "ThreePoint") {
-            const difference = Math.abs(playerPoints - bankerPoints);
-            predictedOutcome = difference <= 3 ? (history[history.length - 1]?.actual === "莊" ? "閒" : "莊") : history[history.length - 1]?.actual;
-            recommendation = predictedOutcome ? `推薦下注：${predictedOutcome}` : "看一把";
-        } else if (currentFormula === "Size") {
-            const largeCards = [3, 4, 5, 8, 9];
-            const smallCards = [0, 1, 2, 6, 7];
-            const allCards = [playerInput[0], playerInput[1], playerInput[2], bankerInput[0], bankerInput[1], bankerInput[2]].map(Number);
-            const largeCount = allCards.filter(card => largeCards.includes(card)).length;
-            const smallCount = allCards.filter(card => smallCards.includes(card)).length;
-            
-            if (largeCount > smallCount) {
-                recommendation = "大牌規律 - 可能走長龍/兩房一廳";
-            } else if (smallCount > largeCount) {
-                recommendation = "小牌規律 - 可能走單/雙跳";
-            } else {
-                recommendation = "看一把";
+        if (currentFormula === "PointDifference") {
+            const pointDifference = Math.abs(playerPoints - bankerPoints);
+            let pointDiffFrequency = 0;
+            if ([0, 1, 2, 3, 9].includes(pointDifference)) {
+                pointDiffFrequency = 6;
+            } else if ([5, 6, 8].includes(pointDifference)) {
+                pointDiffFrequency = -6;
+            } else if ([4, 7].includes(pointDifference)) {
+                pointDiffFrequency = -5;
             }
-        } else if (currentFormula === "Stability") {
-            if (history.length >= 5) {
-                const stabilityValues = [[0, 3, -3, 4, 5, 5, 5, 7, 9, 10], [-2, 0, 2, 3, 4, 6, 4, 4, 6, 6], /*省略數據*/];
-                const stabilityValue = stabilityValues[playerPoints][bankerPoints];
-                if (stabilityValue < 0) recommendation = "推薦閒";
-                else if (stabilityValue > 0) recommendation = "推薦莊";
-                else recommendation = "無建議";
-            } else recommendation = "等待足夠局數...";
+
+            const allCards = [playerInput[0], playerInput[1], playerInput[2], bankerInput[0], bankerInput[1], bankerInput[2]].map(Number);
+            let flowRate = 0;
+            allCards.forEach(card => {
+                if ([1, 2, 8, 9].includes(card)) flowRate += 1;
+                else if ([5, 6, 7].includes(card)) flowRate -= 1;
+                else if ([3, 4].includes(card)) flowRate -= 4;
+            });
+
+            const pointDiffRate = pointDiffFrequency + flowRate;
+            recommendation = pointDiffRate > 0 ? "推薦閒" : pointDiffRate < 0 ? "推薦莊" : "看一把";
+
+        } else {
+            recommendation = "等待輸入...";
         }
 
         document.getElementById("predictionResult").innerText = recommendation;
