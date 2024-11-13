@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>Timo百家輔助</title>
     <style>
+        /* 字體設定 */
         @font-face {
             font-family: 'CustomFont';
             src: url('https://zheyujiang2003.github.io/Timo/Custom.ttf') format('truetype');
@@ -12,10 +13,11 @@
             font-style: normal;
         }
 
+        /* 基本樣式和顏色方案 */
         * { box-sizing: border-box; margin: 0; padding: 0; font-weight: normal; }
         body, button, select {
             font-family: 'CustomFont', serif;
-            background-color: #D3D3D3;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e0e5ec 100%);
             color: #333;
             display: flex;
             flex-direction: column;
@@ -28,13 +30,16 @@
             font-size: 2.5em; 
             margin-bottom: 5px; 
             color: #333; 
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
         }
         .subtext {
             font-size: 0.9em;
-            color: #ff4500;
+            color: #ff6347;
             margin-bottom: 20px;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
         }
 
+        /* 容器和卡片樣式 */
         .container {
             display: flex;
             flex-direction: column;
@@ -43,10 +48,15 @@
             max-width: 600px;
             background: #fff;
             border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
             padding: 25px;
             overflow: hidden;
             align-items: center;
+            transition: all 0.3s ease;
+        }
+        .container:hover {
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+            transform: translateY(-5px);
         }
 
         @media (orientation: landscape) and (min-width: 500px) {
@@ -127,14 +137,19 @@
             }
         }
 
+        /* 面板樣式 */
         .panel {
             width: 100%;
             padding: 15px;
             background-color: #ffffff;
             border-radius: 12px;
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
             margin-bottom: 20px;
             text-align: center;
+            transition: all 0.3s ease;
+        }
+        .panel:hover {
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
         }
 
         .input-group {
@@ -158,11 +173,12 @@
             outline: none;
             transition: all 0.3s ease;
             text-align: center;
+            box-shadow: inset 1px 1px 3px rgba(0,0,0,0.1);
         }
 
         input[type="text"]:focus {
             border-color: #0071e3;
-            box-shadow: 0 0 0 4px rgba(0, 113, 227, 0.15);
+            box-shadow: 0 0 5px rgba(0, 113, 227, 0.2);
         }
 
         button, select {
@@ -177,6 +193,7 @@
             margin-top: 10px;
             font-family: 'CustomFont', serif;
             text-align: center;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
         }
 
         button.calculate-btn { background-color: #0071e3; }
@@ -191,6 +208,7 @@
             text-align: center;
             padding-left: 10px;
             -moz-text-align-last: center;
+            box-shadow: inset 1px 1px 3px rgba(0,0,0,0.1);
         }
 
         .prediction-result, .accuracy {
@@ -202,6 +220,10 @@
             color: #333;
             margin-top: 10px;
             text-align: center;
+            transition: all 0.3s ease;
+        }
+        .prediction-result:hover, .accuracy:hover {
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
         }
 
         .prediction-result h2 {
@@ -214,6 +236,7 @@
             color: #00796b;
         }
 
+        /* 棋盤樣式 */
         .grid-container {
             display: grid;
             grid-template-columns: repeat(6, 1fr);
@@ -225,6 +248,7 @@
             width: 100%;
             max-width: 240px;
             margin: auto;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
 
         .grid-item {
@@ -235,27 +259,30 @@
             color: #333;
             height: 40px;
             border: 1px solid #ddd;
+            transition: all 0.3s ease;
         }
-
         .grid-item.zhuang {
             background-color: #ff4c4c;
             color: white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.15);
         }
-
         .grid-item.xian {
             background-color: #4c8cff;
             color: white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.15);
         }
-
         .grid-item.heju {
             background-color: #4CAF50;
             color: white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.15);
         }
 
+        /* 社交按鈕樣式 */
         .social-links {
             display: flex;
             gap: 15px;
             justify-content: center;
+            margin-top: 10px;
         }
 
         .social-links a {
@@ -265,12 +292,13 @@
             background-size: cover;
             background-position: center;
             border-radius: 50%;
-            transition: transform 0.3s ease;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
         }
 
         .social-links a:hover {
             transform: scale(1.1);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.25);
         }
 
         .social-links .youtube { background-image: url('https://upload.wikimedia.org/wikipedia/commons/0/09/YouTube_full-color_icon_%282017%29.svg'); }
@@ -343,19 +371,6 @@
     let correctPredictions = 0;
     const history = [];
     let currentFormula = 'AP';
-    const stabilityValues = [
-        /* 按照圖片中的安定值表填入對應值，例如 [-3, 0, -2, ...] */
-        [-3, 3, 3, 4, 5, 5, 5, 7, 10, 10],
-        [0, -3, 3, 3, 4, 4, 6, 7, 10, 10],
-        [-2, -2, -3, 0, 4, 4, 5, 6, 10, 10],
-        [-2, -2, -2, -2, 0, 4, 4, 5, 10, 10],
-        [-4, -4, -4, -4, -4, 0, 4, 5, 10, 10],
-        [-5, -5, -5, -5, -5, -4, 0, 5, 10, 10],
-        [-6, -6, -5, -5, -5, -5, -5, 0, 10, 10],
-        [-10, -10, -10, -10, -10, -5, -4, -5, 0, 10],
-        [-10, -10, -10, -10, -10, -10, -10, -10, 0, 10],
-        [-10, -10, -10, -10, -10, -10, -10, -10, -10, 0]
-    ];
 
     function checkFormula() {
         currentFormula = document.getElementById("formulaSelect").value;
