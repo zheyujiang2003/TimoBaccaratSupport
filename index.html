@@ -76,7 +76,9 @@
                 background-color: #e7f4f7;
                 color: #00796b;
                 margin-top: 15px;
-                max-width: 200px;
+                max-width: 180px;
+                transform: scale(0.9); /* 等比例縮小10% */
+                margin-bottom: 15px; /* 保留與歷史展示區的適當間距 */
             }
             .grid-container {
                 max-width: 240px;
@@ -359,9 +361,6 @@
         currentFormula = document.getElementById("formulaSelect").value;
         if (currentFormula === "Size") {
             alert("本模式較不適合新手，將不展示預測準確率");
-            document.getElementById("accuracyDisplay").style.display = "none";
-        } else if (currentFormula === "Stability") {
-            alert("安定值公式：輸入五局後開始預測");
             document.getElementById("accuracyDisplay").style.display = "none";
         } else {
             document.getElementById("accuracyDisplay").style.display = "block";
