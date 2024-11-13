@@ -196,13 +196,12 @@
         select {
             background-color: #f0f0f0;
             color: #333;
-            padding-left: 10px;
+            padding: 10px;
             font-size: 1.1em;
-            text-align: center;
-            -moz-text-align-last: center;
-            -webkit-text-align-last: center;
+            border-radius: 8px;
             box-shadow: inset 1px 1px 3px rgba(0,0,0,0.1);
-            text-align-last: center; /* 確保在所有瀏覽器中置中 */
+            text-align-last: center;
+            appearance: none; /* 隱藏默認箭頭 */
         }
 
         .prediction-result, .accuracy {
