@@ -191,7 +191,7 @@
             border-radius: 8px;
             box-shadow: inset 1px 1px 3px rgba(0,0,0,0.1);
             text-align-last: center;
-            appearance: none; /* 隱藏默認箭頭 */
+            appearance: none;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -328,11 +328,11 @@
 </div>
 
 <script>
-    const AP_VALUES = {0: 0.5, 1: 0.4, 2: 0.3, 3: 0.3, 4: 0.1, 5: 0.2, 6: 0.3, 7: 0.3, 8: 0.5, 9: 0.1};
-    const CP_VALUES = {1: -5, 2: -4, 3: -3, 4: -2, 5: 1, 6: 2, 7: 3, 8: 4, 9: 5};
+    const HV_VALUES = {1: 9, 2: 8, 3: 7, 4: 6, 5: 5, 6: 1, 7: 3, 8: 2, 9: 2};
+    const AG_VALUES = {0: -4, 1: -5, 2: -5, 3: -2, 4: -1, 5: -1, 6: 3, 7: 4, 8: 5, 9: 6};
+    const history = [];
 
     function checkFormula() {
-        const formula = document.getElementById("formulaSelect").value;
         document.getElementById("predictionResult").innerText = "等待輸入...";
         updateHistoryDisplay();
     }
@@ -350,30 +350,41 @@
         const bankerPoints = (parseInt(bankerInput[0]) + parseInt(bankerInput[1]) + parseInt(bankerInput[2])) % 10;
         let actualOutcome = playerPoints > bankerPoints ? "閒" : bankerPoints > playerPoints ? "莊" : "和";
 
-        const playerCP = calculateCP(playerInput);
-        const bankerCP = calculateCP(bankerInput);
-        const playerAP = AP_VALUES[playerPoints];
-        const bankerAP = AP_VALUES[bankerPoints];
-        
-        const playerAdvantage = playerCP * playerAP;
-        const bankerAdvantage = bankerCP * bankerAP;
+        if (history.length < 2) {
+            history.push({ actual: actualOutcome });
+            updateHistoryDisplay();
+            clearInputs();
+            return;
+        }
+
+        const playerHV = calculateHV(playerInput);
+        const bankerHV = calculateHV(bankerInput);
+
+        const previousOutcome = history[history.length - 1];
+        const pointDifference = Math.abs(playerPoints - bankerPoints);
+        const playerAG = AG_VALUES[pointDifference];
+        const bankerAG = AG_VALUES[pointDifference];
+
+        const playerTP = playerAG !== 0 ? playerHV / playerAG : 0;
+        const bankerTP = bankerAG !== 0 ? bankerHV / bankerAG : 0;
 
         let recommendation = "看一把";
-        if (playerAdvantage > bankerAdvantage) {
+        if (playerTP > bankerTP) {
             recommendation = "推薦下閒";
-        } else if (bankerAdvantage > playerAdvantage) {
+        } else if (bankerTP > playerTP) {
             recommendation = "推薦下莊";
         }
 
+        history.push({ actual: actualOutcome, recommended: recommendation });
         document.getElementById("predictionResult").innerText = recommendation;
         updateHistoryDisplay();
         clearInputs();
     }
 
-    function calculateCP(cards) {
-        return Array.from(cards).reduce((sum, card) => {
+    function calculateHV(cards) {
+        return Array.from(cards).reduce((max, card) => {
             const value = parseInt(card);
-            return sum + (CP_VALUES[value] || 0);
+            return Math.max(max, HV_VALUES[value] || 0);
         }, 0);
     }
 
@@ -384,6 +395,24 @@
         items.forEach(item => {
             item.classList.remove('zhuang', 'xian', 'heju');
             item.innerText = '';
+        });
+
+        history.forEach((entry, index) => {
+            const row = index % 6;
+            const col = Math.floor(index / 6);
+            const targetIndex = row * 6 + col;
+            const targetItem = items[targetIndex];
+            
+            if (entry.actual === "莊") {
+                targetItem.classList.add("zhuang");
+                targetItem.innerText = "莊";
+            } else if (entry.actual === "閒") {
+                targetItem.classList.add("xian");
+                targetItem.innerText = "閒";
+            } else {
+                targetItem.classList.add("heju");
+                targetItem.innerText = "和";
+            }
         });
     }
 
@@ -396,6 +425,7 @@
         document.getElementById("player").value = "";
         document.getElementById("banker").value = "";
         document.getElementById("predictionResult").innerText = "等待輸入...";
+        history.length = 0;
         updateHistoryDisplay();
     }
 </script>
