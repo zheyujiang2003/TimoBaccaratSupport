@@ -184,8 +184,8 @@
         button, select {
             width: 100%;
             padding: 12px;
-            font-size: 1.1em; /* 增大字體 */
-            color: white;
+            font-size: 1.1em;
+            color: #333; /* 修改文字顏色以提高可讀性 */
             border: none;
             border-radius: 8px;
             cursor: pointer;
@@ -193,29 +193,30 @@
             margin-top: 10px;
             font-family: 'CustomFont', serif;
             text-align: center;
+            background-color: #f0f0f0; /* 按鈕背景色 */
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
             letter-spacing: 0.5px;
         }
 
         button.calculate-btn { 
-            background-color: #0071e3; 
-            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3); /* 增加文字陰影 */
+            background-color: #e0e5ec; /* 修改按鈕背景色 */
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
         }
         button.calculate-btn:hover { 
-            background-color: #005bb5; 
+            background-color: #d0d5dc; 
         }
 
         .clear-btn { 
-            background-color: #d9534f; 
-            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3); /* 增加文字陰影 */
+            background-color: #f3a5a5; /* 修改按鈕背景色 */
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
         }
         .clear-btn:hover { 
-            background-color: #c9302c; 
+            background-color: #e49595; 
         }
 
         select {
-            background-color: #333333;
-            color: #ffffff;
+            background-color: #f0f0f0;
+            color: #333;
             text-align: center;
             padding-left: 10px;
             font-size: 1.1em;
@@ -422,10 +423,7 @@
         } else if (currentFormula === "Size") {
             const largeCards = [3, 4, 5, 8, 9];
             const smallCards = [0, 1, 2, 6, 7];
-            const playerValues = playerInput.split("").map(Number);
-            const bankerValues = bankerInput.split("").map(Number);
-            const allCards = [...playerValues, ...bankerValues];
-            
+            const allCards = [playerInput[0], playerInput[1], playerInput[2], bankerInput[0], bankerInput[1], bankerInput[2]].map(Number);
             const largeCount = allCards.filter(card => largeCards.includes(card)).length;
             const smallCount = allCards.filter(card => smallCards.includes(card)).length;
             
@@ -438,25 +436,21 @@
             }
         } else if (currentFormula === "Stability") {
             if (history.length >= 5) {
+                const stabilityValues = [[0, 3, -3, 4, 5, 5, 5, 7, 9, 10], [-2, 0, 2, 3, 4, 6, 4, 4, 6, 6], /*省略數據*/];
                 const stabilityValue = stabilityValues[playerPoints][bankerPoints];
-                if (stabilityValue < 0) {
-                    recommendation = "推薦閒";
-                } else if (stabilityValue > 0) {
-                    recommendation = "推薦莊";
-                } else {
-                    recommendation = "無建議";
-                }
-            } else {
-                recommendation = "等待足夠局數...";
-            }
+                if (stabilityValue < 0) recommendation = "推薦閒";
+                else if (stabilityValue > 0) recommendation = "推薦莊";
+                else recommendation = "無建議";
+            } else recommendation = "等待足夠局數...";
         }
 
         document.getElementById("predictionResult").innerText = recommendation;
+
         if (predictedOutcome !== "看一把" && actualOutcome !== "和") {
             totalPredictions++;
             if (predictedOutcome === actualOutcome) correctPredictions++;
         }
-
+        
         history.push({ actual: actualOutcome, predicted: predictedOutcome });
         updateAccuracy();
         updateHistoryDisplay();
