@@ -200,6 +200,7 @@
             padding-left: 10px;
             font-size: 1.1em;
             -moz-text-align-last: center;
+            -webkit-text-align-last: center;
             box-shadow: inset 1px 1px 3px rgba(0,0,0,0.1);
         }
 
@@ -345,6 +346,7 @@
     let correctPredictions = 0;
     const history = [];
     let currentFormula = 'AP';
+    let pointDifferenceHistory = [];
 
     function checkFormula() {
         currentFormula = document.getElementById("formulaSelect").value;
@@ -392,8 +394,14 @@
             });
 
             const pointDiffRate = pointDiffFrequency + flowRate;
-            recommendation = pointDiffRate > 0 ? "推薦閒" : pointDiffRate < 0 ? "推薦莊" : "看一把";
+            pointDifferenceHistory.push(Math.sign(pointDiffRate));
 
+            if (pointDifferenceHistory.length >= 3 && 
+                pointDifferenceHistory.slice(-3).every(value => value === Math.sign(pointDiffRate))) {
+                recommendation = "振盪期 - 看一把";
+            } else {
+                recommendation = pointDiffRate > 0 ? "推薦閒" : pointDiffRate < 0 ? "推薦莊" : "看一把";
+            }
         } else {
             recommendation = "等待輸入...";
         }
@@ -458,6 +466,7 @@
         totalPredictions = 0;
         correctPredictions = 0;
         history.length = 0;
+        pointDifferenceHistory = [];
 
         updateHistoryDisplay();
     }
