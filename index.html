@@ -50,11 +50,7 @@
             align-items: center;
         }
 
-        /* 橫屏模式設計 */
         @media (orientation: landscape) and (min-width: 500px) {
-            body {
-                padding: 0;
-            }
             .container {
                 flex-direction: row;
                 justify-content: space-between;
@@ -75,8 +71,16 @@
                 text-align: center;
                 min-height: 450px;
             }
+            .accuracy {
+                padding: 10px;
+                font-size: 0.9em;
+                background-color: #e7f4f7;
+                color: #00796b;
+                margin-top: 15px;
+                max-width: 200px;
+            }
             .grid-container {
-                max-width: 240px; /* 確保在橫屏時保持6x6正方形 */
+                max-width: 240px;
             }
             .social-links.desktop {
                 display: flex;
@@ -98,7 +102,6 @@
             }
         }
 
-        /* 手機直屏設計 */
         @media (orientation: portrait), (max-width: 499px) {
             .social-links.desktop {
                 display: none;
@@ -116,10 +119,10 @@
                 margin: 20px 0;
             }
             .grid-container {
-                margin: 15px auto; /* 添加垂直間距 */
+                margin: 15px auto;
             }
             .accuracy {
-                margin-bottom: 20px; /* 與歷史展示區間距 */
+                margin-bottom: 20px;
             }
         }
 
@@ -219,7 +222,7 @@
             background-color: #fafafa;
             border: 1px solid #ddd;
             width: 100%;
-            max-width: 240px; /* 確保在橫屏和直屏下保持6x6正方形 */
+            max-width: 240px;
             margin: auto;
         }
 
@@ -306,13 +309,14 @@
         <select id="formulaSelect" onchange="checkFormula()">
             <option value="AP">AP 權重模式</option>
             <option value="ThreePoint">三點叉公式</option>
+            <option value="Size">大小牌公式</option>
         </select>
 
         <div class="prediction-result">
             <h2>AI說</h2>
             <div id="predictionResult">等待輸入...</div>
         </div>
-        <div class="accuracy">
+        <div class="accuracy" id="accuracyDisplay">
             <div>目前預測準確率：<span id="accuracyRate">100%</span></div>
         </div>
 
@@ -325,7 +329,6 @@
         </div>
     </div>
 
-    <!-- 手機直屏的社交按鈕 -->
     <div class="social-links mobile">
         <a href="https://youtube.com/channel/UCj1P2Tt82JtrbhVXui8DXcg?si=V9NidILTpYH3dTZx" target="_blank" class="youtube"></a>
         <a href="https://www.instagram.com/gamble_couple666/profilecard/?igsh=OGt1ZGJndHNiMTB4" target="_blank" class="instagram"></a>
@@ -341,6 +344,12 @@
 
     function checkFormula() {
         currentFormula = document.getElementById("formulaSelect").value;
+        if (currentFormula === "Size") {
+            alert("本模式較不適合新手，將不展示預測準確率");
+            document.getElementById("accuracyDisplay").style.display = "none";
+        } else {
+            document.getElementById("accuracyDisplay").style.display = "block";
+        }
         updateAccuracy();
         updateHistoryDisplay();
     }
@@ -368,6 +377,23 @@
             const difference = Math.abs(playerPoints - bankerPoints);
             predictedOutcome = difference <= 3 ? (history[history.length - 1]?.actual === "莊" ? "閒" : "莊") : history[history.length - 1]?.actual;
             recommendation = predictedOutcome ? `推薦下注：${predictedOutcome}` : "看一把";
+        } else if (currentFormula === "Size") {
+            const largeCards = [3, 4, 5, 8, 9];
+            const smallCards = [0, 1, 2, 6, 7];
+            const playerValues = playerInput.split("").map(Number);
+            const bankerValues = bankerInput.split("").map(Number);
+            const allCards = [...playerValues, ...bankerValues];
+            
+            const largeCount = allCards.filter(card => largeCards.includes(card)).length;
+            const smallCount = allCards.filter(card => smallCards.includes(card)).length;
+            
+            if (largeCount > smallCount) {
+                recommendation = "大牌規律 - 可能走長龍/兩房一廳";
+            } else if (smallCount > largeCount) {
+                recommendation = "小牌規律 - 可能走單/雙跳";
+            } else {
+                recommendation = "看一把";
+            }
         }
 
         document.getElementById("predictionResult").innerText = recommendation;
