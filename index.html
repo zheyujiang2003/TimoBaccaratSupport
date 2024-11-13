@@ -21,6 +21,7 @@
             flex-direction: column;
             align-items: center;
             padding: 20px;
+            text-align: center;
         }
         h1 { 
             font-size: 2.5em; 
@@ -32,7 +33,6 @@
             font-size: 0.9em;
             color: #ff4500;
             margin-bottom: 20px;
-            text-align: center;
         }
 
         .container {
@@ -55,14 +55,16 @@
                 justify-content: space-between;
                 max-width: 1200px;
                 gap: 20px;
+                padding: 40px;
             }
             .panel {
-                width: 50%;
+                width: 48%;
                 background-color: #ffffff;
                 border-radius: 12px;
                 box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
                 padding: 25px;
                 position: relative;
+                text-align: center;
             }
             .social-links.desktop {
                 display: flex;
@@ -77,10 +79,10 @@
             }
             .team-info {
                 display: block;
-                text-align: center;
-                font-size: 1.7em;
+                font-size: 1.5em;
                 color: #555;
-                margin-top: 15px;
+                margin-top: 20px;
+                white-space: nowrap;
             }
         }
 
@@ -96,7 +98,6 @@
             }
             .team-info {
                 display: block;
-                text-align: center;
                 font-size: 1.3em;
                 color: #555;
                 margin: 20px 0;
@@ -110,10 +111,12 @@
             border-radius: 12px;
             box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
             margin-bottom: 20px;
+            text-align: center;
         }
 
         .input-group {
             margin-bottom: 15px;
+            text-align: center;
         }
 
         label {
@@ -131,6 +134,7 @@
             border-radius: 8px;
             outline: none;
             transition: all 0.3s ease;
+            text-align: center;
         }
 
         input[type="text"]:focus {
@@ -149,6 +153,7 @@
             transition: all 0.3s ease;
             margin-top: 10px;
             font-family: 'CustomFont', serif;
+            text-align: center;
         }
 
         button.calculate-btn { background-color: #0071e3; }
@@ -160,9 +165,9 @@
         select {
             background-color: #333333;
             color: #ffffff;
-            text-align: left;
+            text-align: center;
             padding-left: 10px;
-            -moz-text-align-last: left;
+            -moz-text-align-last: center;
         }
 
         .prediction-result, .accuracy {
