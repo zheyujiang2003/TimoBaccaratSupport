@@ -293,22 +293,14 @@
 </div>
 
 <script>
-    let totalPredictionsAP = 0;
-    let correctPredictionsAP = 0;
-    let totalPredictionsThreePoint = 0;
-    let correctPredictionsThreePoint = 0;
-    const historyAP = [];
-    const historyThreePoint = [];
-    let currentFormula = 'AP';
+    let totalPredictions = 0;
+    let correctPredictions = 0;
+    const history = [];
 
     function checkFormula() {
-        const formula = document.getElementById("formulaSelect").value;
-        currentFormula = formula;
-        updateHistoryDisplay();
+        currentFormula = document.getElementById("formulaSelect").value;
         updateAccuracy();
-        if (formula === "ThreePoint") {
-            alert("請選擇房間30局內為優，以提高三點叉公式的預測效果！");
-        }
+        updateHistoryDisplay();
     }
 
     function calculateResult() {
@@ -316,7 +308,7 @@
         const bankerInput = document.getElementById('banker').value.padEnd(3, '0');
 
         if (!/^[0-9]+$/.test(playerInput) || !/^[0-9]+$/.test(bankerInput) || playerInput.length !== 3 || bankerInput.length !== 3) {
-            alert("請確保輸入的牌點數為三位數字或字母（A、J、Q、K），無補牌時請輸入0。");
+            alert("請確保輸入的牌點數為三位數字，無補牌時請輸入0。");
             return;
         }
 
@@ -329,48 +321,27 @@
             const playerAP = {0: 0.5, 1: 0.4, 2: 0.3, 3: 0.3, 4: 0.1, 5: 0.2, 6: 0.3, 7: 0.3, 8: 0.5, 9: 0.1}[playerPoints];
             const bankerAP = {0: 0.5, 1: 0.4, 2: 0.3, 3: 0.3, 4: 0.1, 5: 0.2, 6: 0.3, 7: 0.3, 8: 0.5, 9: 0.1}[bankerPoints];
             predictedOutcome = playerAP > bankerAP ? "閒" : bankerAP > playerAP ? "莊" : "看一把";
-            recommendation = predictedOutcome === "看一把" ? "建議看一把" : `建議下注：${predictedOutcome}`;
-            historyAP.push({ actual: actualOutcome, predicted: predictedOutcome });
-            
-            if (predictedOutcome !== "看一把" && actualOutcome !== "和") {
-                totalPredictionsAP++;
-                if (predictedOutcome === actualOutcome) {
-                    correctPredictionsAP++;
-                }
-            }
+            recommendation = predictedOutcome === "看一把" ? "看一把" : `建議下注：${predictedOutcome}`;
         } else if (currentFormula === "ThreePoint") {
-            const lastOutcome = historyThreePoint.length > 0 ? historyThreePoint[historyThreePoint.length - 1].actual : null;
             const difference = Math.abs(playerPoints - bankerPoints);
-            if (actualOutcome === "和") {
-                recommendation = "建議看一把";
-                predictedOutcome = "看一把";
-            } else {
-                predictedOutcome = difference <= 3 ? (lastOutcome === "莊" ? "閒" : "莊") : lastOutcome;
-                recommendation = lastOutcome === "和" ? "建議看一把" : `推薦下注：${predictedOutcome}`;
-            }
-            historyThreePoint.push({ actual: actualOutcome, predicted: predictedOutcome });
-            
-            if (predictedOutcome !== "看一把" && actualOutcome !== "和") {
-                totalPredictionsThreePoint++;
-                if (predictedOutcome === actualOutcome) {
-                    correctPredictionsThreePoint++;
-                }
-            }
+            predictedOutcome = difference <= 3 ? (history[history.length - 1]?.actual === "莊" ? "閒" : "莊") : history[history.length - 1]?.actual;
+            recommendation = predictedOutcome ? `推薦下注：${predictedOutcome}` : "看一把";
         }
 
         document.getElementById("predictionResult").innerText = recommendation;
-        updateHistoryDisplay();
+        if (predictedOutcome !== "看一把" && actualOutcome !== "和") {
+            totalPredictions++;
+            if (predictedOutcome === actualOutcome) correctPredictions++;
+        }
+
+        history.push({ actual: actualOutcome, predicted: predictedOutcome });
         updateAccuracy();
+        updateHistoryDisplay();
         clearInputs();
     }
 
     function updateAccuracy() {
-        let accuracyRate;
-        if (currentFormula === "AP") {
-            accuracyRate = (totalPredictionsAP <= 1) ? 100 : ((correctPredictionsAP / totalPredictionsAP) * 100).toFixed(2);
-        } else if (currentFormula === "ThreePoint") {
-            accuracyRate = (totalPredictionsThreePoint <= 1) ? 100 : ((correctPredictionsThreePoint / totalPredictionsThreePoint) * 100).toFixed(2);
-        }
+        const accuracyRate = totalPredictions <= 1 ? 100 : ((correctPredictions / totalPredictions) * 100).toFixed(2);
         document.getElementById("accuracyRate").innerText = `${accuracyRate}%`;
     }
 
@@ -383,45 +354,40 @@
             item.innerText = '';
         });
 
-        const history = currentFormula === "AP" ? historyAP : historyThreePoint;
-
         history.forEach((entry, index) => {
             const row = index % 6;
             const col = Math.floor(index / 6);
             const targetIndex = row * 6 + col;
             const targetItem = items[targetIndex];
             
-            if (entry.actual === '莊') {
-                targetItem.classList.add('zhuang');
-                targetItem.innerText = '莊';
-            } else if (entry.actual === '閒') {
-                targetItem.classList.add('xian');
-                targetItem.innerText = '閒';
+            if (entry.actual === "莊") {
+                targetItem.classList.add("zhuang");
+                targetItem.innerText = "莊";
+            } else if (entry.actual === "閒") {
+                targetItem.classList.add("xian");
+                targetItem.innerText = "閒";
             } else {
-                targetItem.classList.add('heju');
-                targetItem.innerText = '和';
+                targetItem.classList.add("heju");
+                targetItem.innerText = "和";
             }
         });
     }
 
     function clearInputs() {
-        document.getElementById('player').value = "";
-        document.getElementById('banker').value = "";
+        document.getElementById("player").value = "";
+        document.getElementById("banker").value = "";
     }
 
     function clearAll() {
-        document.getElementById('player').value = "";
-        document.getElementById('banker').value = "";
+        document.getElementById("player").value = "";
+        document.getElementById("banker").value = "";
         document.getElementById("predictionResult").innerText = "等待輸入...";
         document.getElementById("accuracyRate").innerText = "100%";
-        
-        totalPredictionsAP = 0;
-        correctPredictionsAP = 0;
-        totalPredictionsThreePoint = 0;
-        correctPredictionsThreePoint = 0;
-        historyAP.length = 0;
-        historyThreePoint.length = 0;
-        
+
+        totalPredictions = 0;
+        correctPredictions = 0;
+        history.length = 0;
+
         updateHistoryDisplay();
     }
 </script>
