@@ -5,8 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>Timo百家輔助</title>
     <style>
-        /* 保留您的 CSS3 美化樣式 */
-        /* 設定主體字體、背景和按鈕樣式 */
         @font-face {
             font-family: 'CustomFont';
             src: url('https://zheyujiang2003.github.io/Timo/Custom.ttf') format('truetype');
@@ -53,8 +51,231 @@
             align-items: center;
         }
 
-        /* 其他樣式保留 */
-        /* 如橫屏佈局、按鈕樣式、社交媒體連結等 */
+        @media (orientation: landscape) and (min-width: 500px) {
+            .container {
+                flex-direction: row;
+                justify-content: space-between;
+                width: 100%;
+                max-width: 100vw;
+                gap: 20px;
+                padding: 40px 5%;
+            }
+            .panel {
+                flex: 1;
+                background-color: #ffffff;
+                border-radius: 12px;
+                box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+                padding: 25px;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+                min-height: 450px;
+            }
+            .accuracy {
+                padding: 10px;
+                font-size: 0.9em;
+                background-color: #e7f4f7;
+                color: #00796b;
+                margin-top: 15px;
+                max-width: 180px;
+                transform: scale(0.9);
+                margin-bottom: 15px;
+            }
+            .grid-container {
+                max-width: 240px;
+            }
+            .social-links.desktop {
+                display: flex;
+                width: 100%;
+                justify-content: center;
+                margin-top: 25px;
+                padding-top: 15px;
+                border-top: 1px solid #ddd;
+            }
+            .social-links.mobile {
+                display: none;
+            }
+            .team-info {
+                display: block;
+                font-size: 1.5em;
+                color: #555;
+                margin-top: 25px;
+                white-space: nowrap;
+            }
+        }
+
+        @media (orientation: portrait), (max-width: 499px) {
+            .social-links.desktop {
+                display: none;
+            }
+            .social-links.mobile {
+                display: flex;
+                gap: 15px;
+                justify-content: center;
+                margin-top: 15px;
+            }
+            .team-info {
+                display: block;
+                font-size: 1.3em;
+                color: #555;
+                margin: 20px 0;
+            }
+            .grid-container {
+                margin: 15px auto;
+            }
+            .accuracy {
+                margin-bottom: 20px;
+            }
+        }
+
+        .panel {
+            width: 100%;
+            padding: 15px;
+            background-color: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .input-group {
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        label {
+            font-size: 1.1em;
+            color: #333;
+            margin-bottom: 5px;
+            display: block;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            font-size: 1em;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            outline: none;
+            text-align: center;
+            box-shadow: inset 1px 1px 3px rgba(0,0,0,0.1);
+        }
+
+        button, select {
+            width: 100%;
+            padding: 12px;
+            font-size: 1.1em;
+            color: #333;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+            font-family: 'CustomFont', serif;
+            text-align: center;
+            background-color: #f0f0f0;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+            letter-spacing: 0.5px;
+        }
+
+        button.calculate-btn { 
+            background-color: #e0e5ec;
+        }
+        button.calculate-btn:hover { 
+            background-color: #d0d5dc; 
+        }
+
+        .clear-btn { 
+            background-color: #f3a5a5;
+        }
+        .clear-btn:hover { 
+            background-color: #e49595; 
+        }
+
+        select {
+            background-color: #f0f0f0;
+            color: #333;
+            padding: 10px;
+            font-size: 1.1em;
+            border-radius: 8px;
+            box-shadow: inset 1px 1px 3px rgba(0,0,0,0.1);
+            text-align-last: center;
+            appearance: none; /* 隱藏默認箭頭 */
+        }
+
+        .prediction-result, .accuracy {
+            padding: 15px;
+            border-radius: 10px;
+            background-color: #f9f9f9;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+            font-size: 1em;
+            color: #333;
+            margin-top: 10px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .accuracy {
+            background-color: #e7f4f7;
+            color: #00796b;
+        }
+
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 1px;
+            padding: 5px;
+            border-radius: 5px;
+            background-color: #fafafa;
+            border: 1px solid #ddd;
+            width: 100%;
+            max-width: 240px;
+            margin: auto;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .grid-item {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1em;
+            color: #333;
+            height: 40px;
+            border: 1px solid #ddd;
+            transition: all 0.3s ease;
+        }
+        .grid-item.zhuang {
+            background-color: #ff4c4c;
+            color: white;
+        }
+        .grid-item.xian {
+            background-color: #4c8cff;
+            color: white;
+        }
+        .grid-item.heju {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 10px;
+        }
+
+        .social-links a {
+            width: 50px;
+            height: 50px;
+            display: inline-block;
+            background-size: cover;
+            background-position: center;
+            border-radius: 50%;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+
         .social-links .youtube { background-image: url('https://upload.wikimedia.org/wikipedia/commons/0/09/YouTube_full-color_icon_%282017%29.svg'); }
         .social-links .instagram { background-image: url('https://upload.wikimedia.org/wikipedia/commons/a/a5/Instagram_icon.png'); }
         .social-links .line { background-image: url('https://upload.wikimedia.org/wikipedia/commons/4/41/LINE_logo.svg'); }
@@ -94,7 +315,7 @@
             <option value="ThreePoint">三點叉公式</option>
             <option value="Size">大小牌公式</option>
             <option value="PointDifference">點差公式</option>
-            <option value="Exclusive">Timo 獨家公式 (Beta)</option>
+            <option value="TimoExclusive">Timo 獨家公式（Beta）</option>
         </select>
 
         <div class="prediction-result">
@@ -131,7 +352,7 @@
 
     function checkFormula() {
         currentFormula = document.getElementById("formulaSelect").value;
-        if (currentFormula === "Size" || currentFormula === "PointDifference" || currentFormula === "Exclusive") {
+        if (["Size", "PointDifference", "TimoExclusive"].includes(currentFormula)) {
             alert("本模式較不適合新手，將不展示預測準確率");
             document.getElementById("accuracyDisplay").style.display = "none";
         } else {
@@ -153,34 +374,23 @@
         const playerPoints = (parseInt(playerInput[0]) + parseInt(playerInput[1]) + parseInt(playerInput[2])) % 10;
         const bankerPoints = (parseInt(bankerInput[0]) + parseInt(bankerInput[1]) + parseInt(bankerInput[2])) % 10;
         let actualOutcome = playerPoints > bankerPoints ? "閒" : bankerPoints > playerPoints ? "莊" : "和";
-        let predictedOutcome, recommendation;
+        let recommendation;
 
-        // Timo 獨家公式邏輯
-        if (currentFormula === "Exclusive") {
-            // 1. 連勝檢測
+        if (currentFormula === "TimoExclusive") {
+            // Implement Timo Exclusive Formula
             if (history.length > 0 && history[history.length - 1].actual === actualOutcome) {
                 consecutiveWins++;
             } else {
                 consecutiveWins = 1;
             }
-            let reverseBet = consecutiveWins >= 3 ? (actualOutcome === "莊" ? "閒" : "莊") : actualOutcome;
-
-            // 2. 假設隨機森林和貝葉斯邏輯結果（模擬）
-            let bayesianBet = Math.random() > 0.5 ? "莊" : "閒"; 
-            let randomForestBet = Math.random() > 0.5 ? "莊" : "閒"; 
-
-            // 3. 滾動窗口計算（10局）
-            let rollingWindow = history.slice(-10).filter(x => x.actual === "莊").length > 5 ? "莊" : "閒";
-
-            // 4. 綜合決策
-            recommendation = (reverseBet === "莊" && bayesianBet === "莊" && rollingWindow === "莊") ? "推薦莊" :
-                             (reverseBet === "閒" && bayesianBet === "閒" && rollingWindow === "閒") ? "推薦閒" : "震盪期 看一把或反下";
+            recommendation = consecutiveWins >= 3 ? `反向下注：${actualOutcome === "莊" ? "閒" : "莊"}` : `保持：${actualOutcome}`;
         } else {
             recommendation = "等待輸入...";
         }
 
         document.getElementById("predictionResult").innerText = recommendation;
-        history.push({ actual: actualOutcome, predicted: predictedOutcome });
+
+        history.push({ actual: actualOutcome, predicted: recommendation });
         updateAccuracy();
         updateHistoryDisplay();
         clearInputs();
