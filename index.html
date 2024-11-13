@@ -184,7 +184,7 @@
         button, select {
             width: 100%;
             padding: 12px;
-            font-size: 1em;
+            font-size: 1.1em; /* 增大字體 */
             color: white;
             border: none;
             border-radius: 8px;
@@ -194,19 +194,31 @@
             font-family: 'CustomFont', serif;
             text-align: center;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+            letter-spacing: 0.5px;
         }
 
-        button.calculate-btn { background-color: #0071e3; }
-        button.calculate-btn:hover { background-color: #005bb5; }
+        button.calculate-btn { 
+            background-color: #0071e3; 
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3); /* 增加文字陰影 */
+        }
+        button.calculate-btn:hover { 
+            background-color: #005bb5; 
+        }
 
-        .clear-btn { background-color: #d9534f; }
-        .clear-btn:hover { background-color: #c9302c; }
+        .clear-btn { 
+            background-color: #d9534f; 
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3); /* 增加文字陰影 */
+        }
+        .clear-btn:hover { 
+            background-color: #c9302c; 
+        }
 
         select {
             background-color: #333333;
             color: #ffffff;
             text-align: center;
             padding-left: 10px;
+            font-size: 1.1em;
             -moz-text-align-last: center;
             box-shadow: inset 1px 1px 3px rgba(0,0,0,0.1);
         }
