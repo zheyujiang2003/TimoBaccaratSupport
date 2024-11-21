@@ -61,53 +61,6 @@
             text-align: center;
         }
 
-        .grid-container {
-            display: grid;
-            grid-template-columns: repeat(6, 1fr);
-            gap: 1px;
-            padding: 5px;
-            border-radius: 5px;
-            background-color: #fafafa;
-            border: 1px solid #ddd;
-            width: 100%;
-            max-width: 240px;
-            margin: auto;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
-
-        .grid-item {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 1em;
-            color: #333;
-            height: 40px;
-            border: 1px solid #ddd;
-        }
-        .grid-item.zhuang {
-            background-color: #ff4c4c;
-            color: white;
-        }
-        .grid-item.xian {
-            background-color: #4c8cff;
-            color: white;
-        }
-        .grid-item.heju {
-            background-color: #4CAF50;
-            color: white;
-        }
-
-        .prediction-result {
-            padding: 15px;
-            border-radius: 10px;
-            background-color: #f9f9f9;
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
-            font-size: 1em;
-            color: #333;
-            margin-top: 10px;
-            text-align: center;
-        }
-
         .input-group {
             margin-bottom: 15px;
             text-align: center;
@@ -165,18 +118,53 @@
             background-color: #e49595; 
         }
 
-        select {
-            background-color: #f0f0f0;
+        .prediction-result {
+            padding: 15px;
+            border-radius: 10px;
+            background-color: #f9f9f9;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+            font-size: 1em;
             color: #333;
-            padding: 10px;
-            font-size: 1.1em;
-            border-radius: 8px;
-            box-shadow: inset 1px 1px 3px rgba(0,0,0,0.1);
-            text-align-last: center;
-            appearance: none;
+            margin-top: 10px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 1px;
+            padding: 5px;
+            border-radius: 5px;
+            background-color: #fafafa;
+            border: 1px solid #ddd;
+            width: 100%;
+            max-width: 240px;
+            margin: auto;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .grid-item {
             display: flex;
             justify-content: center;
             align-items: center;
+            font-size: 1em;
+            color: #333;
+            height: 40px;
+            border: 1px solid #ddd;
+            transition: all 0.3s ease;
+        }
+        .grid-item.zhuang {
+            background-color: #ff4c4c;
+            color: white;
+        }
+        .grid-item.xian {
+            background-color: #4c8cff;
+            color: white;
+        }
+        .grid-item.heju {
+            background-color: #4CAF50;
+            color: white;
         }
     </style>
 </head>
@@ -197,8 +185,12 @@
             <input type="text" id="banker" maxlength="3" placeholder="例如：345 或 340">
         </div>
         <button class="calculate-btn" onclick="calculateResult()">計算結果</button>
-        <button class="clear-btn" onclick="clearAll()">清空歷史</button>
+        <button class="clear-btn" onclick="clearAll()">消除全部</button>
 
+        <div class="prediction-result">
+            <h2>AI說</h2>
+            <div id="predictionResult">等待輸入...</div>
+        </div>
         <div class="grid-container" id="historyDisplay">
             <script>
                 for (let i = 0; i < 36; i++) {
@@ -207,62 +199,57 @@
             </script>
         </div>
     </div>
-
-    <div class="panel">
-        <h2>公式選擇</h2>
-        <select id="formulaSelect" onchange="checkFormula()">
-            <option value="AP">AP 權重公式</option>
-            <option value="TimoExclusive">Timo 獨家公式（Beta）</option>
-        </select>
-
-        <div class="prediction-result">
-            <h2>AI說</h2>
-            <div id="predictionResult">等待輸入...</div>
-        </div>
-    </div>
 </div>
 
 <script>
-    const MAX_HISTORY = 36;
+    const HV_VALUES = {1: 9, 2: 8, 3: 7, 4: 6, 5: 5, 6: 1, 7: 3, 8: 2, 9: 2};
+    const AG_VALUES = {0: -4, 1: -5, 2: -5, 3: -2, 4: -1, 5: -1, 6: 3, 7: 4, 8: 5, 9: 6};
     const history = [];
-
-    function checkFormula() {
-        document.getElementById("predictionResult").innerText = "等待輸入...";
-        updateHistoryDisplay();
-    }
 
     function calculateResult() {
         const playerInput = document.getElementById('player').value.padEnd(3, '0');
         const bankerInput = document.getElementById('banker').value.padEnd(3, '0');
 
-        if (!/^[0-9]+$/.test(playerInput) || !/^[0-9]+$/.test(bankerInput)) {
-            alert("請確認輸入正確的牌點數！");
+        if (!/^[0-9]+$/.test(playerInput) || !/^[0-9]+$/.test(bankerInput) || playerInput.length !== 3 || bankerInput.length !== 3) {
+            alert("請確保輸入的牌點數為三位數字，無補牌時請輸入0。");
             return;
         }
 
         const playerPoints = (parseInt(playerInput[0]) + parseInt(playerInput[1]) + parseInt(playerInput[2])) % 10;
         const bankerPoints = (parseInt(bankerInput[0]) + parseInt(bankerInput[1]) + parseInt(bankerInput[2])) % 10;
-        const actualOutcome = playerPoints > bankerPoints ? "閒" : bankerPoints > playerPoints ? "莊" : "和";
+        let actualOutcome = playerPoints > bankerPoints ? "閒" : bankerPoints > playerPoints ? "莊" : "和";
 
-        if (history.length === MAX_HISTORY) {
-            alert("🐯建議挑選新的房間🐯");
-            history.splice(0, history.length - (MAX_HISTORY - 1)); // 保留最近一局
+        if (history.length >= 36) {
+            history.shift(); // 超過 36 局時刪除最早的一局
+            alert("🐯建議挑選新的房間🐯"); // 彈出提示框
         }
 
         history.push({ actual: actualOutcome });
+        document.getElementById("predictionResult").innerText = actualOutcome;
         updateHistoryDisplay();
-        document.getElementById("predictionResult").innerText = `計算完成：${actualOutcome}`;
         clearInputs();
     }
 
     function updateHistoryDisplay() {
-        const items = document.querySelectorAll(".grid-item");
-        items.forEach((item, index) => {
-            item.className = "grid-item";
-            if (history[index]) {
-                const outcome = history[index].actual;
-                item.classList.add(outcome === "莊" ? "zhuang" : outcome === "閒" ? "xian" : "heju");
-                item.innerText = outcome;
+        const historyDisplay = document.getElementById("historyDisplay");
+        const items = historyDisplay.querySelectorAll(".grid-item");
+
+        items.forEach(item => {
+            item.classList.remove('zhuang', 'xian', 'heju');
+            item.innerText = '';
+        });
+
+        history.forEach((entry, index) => {
+            const targetItem = items[index];
+            if (entry.actual === "莊") {
+                targetItem.classList.add("zhuang");
+                targetItem.innerText = "莊";
+            } else if (entry.actual === "閒") {
+                targetItem.classList.add("xian");
+                targetItem.innerText = "閒";
+            } else {
+                targetItem.classList.add("heju");
+                targetItem.innerText = "和";
             }
         });
     }
@@ -273,9 +260,11 @@
     }
 
     function clearAll() {
+        document.getElementById("player").value = "";
+        document.getElementById("banker").value = "";
+        document.getElementById("predictionResult").innerText = "等待輸入...";
         history.length = 0;
         updateHistoryDisplay();
-        document.getElementById("predictionResult").innerText = "等待輸入...";
     }
 </script>
 
