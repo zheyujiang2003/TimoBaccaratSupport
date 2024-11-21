@@ -75,9 +75,42 @@
             .grid-container {
                 max-width: 240px;
             }
+            .social-links.desktop {
+                display: flex;
+                width: 100%;
+                justify-content: center;
+                margin-top: 25px;
+                padding-top: 15px;
+                border-top: 1px solid #ddd;
+            }
+            .social-links.mobile {
+                display: none;
+            }
+            .team-info {
+                display: block;
+                font-size: 1.5em;
+                color: #555;
+                margin-top: 25px;
+                white-space: nowrap;
+            }
         }
 
         @media (orientation: portrait), (max-width: 499px) {
+            .social-links.desktop {
+                display: none;
+            }
+            .social-links.mobile {
+                display: flex;
+                gap: 15px;
+                justify-content: center;
+                margin-top: 15px;
+            }
+            .team-info {
+                display: block;
+                font-size: 1.3em;
+                color: #555;
+                margin: 20px 0;
+            }
             .grid-container {
                 margin: 15px auto;
             }
@@ -131,6 +164,9 @@
             background-color: #f0f0f0;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
             letter-spacing: 0.5px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
 
         button.calculate-btn { 
@@ -156,6 +192,9 @@
             box-shadow: inset 1px 1px 3px rgba(0,0,0,0.1);
             text-align-last: center;
             appearance: none;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
 
         .prediction-result {
@@ -206,6 +245,28 @@
             background-color: #4CAF50;
             color: white;
         }
+
+        .social-links {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 10px;
+        }
+
+        .social-links a {
+            width: 50px;
+            height: 50px;
+            display: inline-block;
+            background-size: cover;
+            background-position: center;
+            border-radius: 50%;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .social-links .youtube { background-image: url('https://upload.wikimedia.org/wikipedia/commons/0/09/YouTube_full-color_icon_%282017%29.svg'); }
+        .social-links .instagram { background-image: url('https://upload.wikimedia.org/wikipedia/commons/a/a5/Instagram_icon.png'); }
+        .social-links .line { background-image: url('https://upload.wikimedia.org/wikipedia/commons/4/41/LINE_logo.svg'); }
     </style>
 </head>
 <body>
@@ -225,7 +286,30 @@
             <input type="text" id="banker" maxlength="3" placeholder="例如：345 或 340">
         </div>
         <button class="calculate-btn" onclick="calculateResult()">計算結果</button>
-        <button class="clear-btn" onclick="clearAll()">清空歷史</button>
+        <button class="clear-btn" onclick="clearAll()">消除全部</button>
+
+        <div class="social-links desktop">
+            <a href="https://youtube.com/channel/UCj1P2Tt82JtrbhVXui8DXcg?si=V9NidILTpYH3dTZx" target="_blank" class="youtube"></a>
+            <a href="https://www.instagram.com/gamble_couple666/profilecard/?igsh=OGt1ZGJndHNiMTB4" target="_blank" class="instagram"></a>
+            <a href="https://lin.ee/ivW2LRm" target="_blank" class="line"></a>
+        </div>
+        <div class="team-info">🪽虎翼團隊-賭狗情侶🪽</div>
+    </div>
+
+    <div class="panel">
+        <h2>公式選擇</h2>
+        <select id="formulaSelect" onchange="checkFormula()">
+            <option value="AP">AP 權重公式</option>
+            <option value="ThreePoint">三點叉公式</option>
+            <option value="Size">大小牌公式</option>
+            <option value="PointDifference">點差公式</option>
+            <option value="TimoExclusive">Timo 獨家公式（Beta）</option>
+        </select>
+
+        <div class="prediction-result">
+            <h2>AI說</h2>
+            <div id="predictionResult">等待輸入...</div>
+        </div>
 
         <div class="grid-container" id="historyDisplay">
             <script>
@@ -236,23 +320,17 @@
         </div>
     </div>
 
-    <div class="panel">
-        <h2>公式選擇</h2>
-        <select id="formulaSelect" onchange="checkFormula()">
-            <option value="AP">AP 權重公式</option>
-            <option value="TimoExclusive">Timo 獨家公式（Beta）</option>
-        </select>
-
-        <div class="prediction-result">
-            <h2>AI說</h2>
-            <div id="predictionResult">等待輸入...</div>
-        </div>
+    <div class="social-links mobile">
+        <a href="https://youtube.com/channel/UCj1P2Tt82JtrbhVXui8DXcg?si=V9NidILTpYH3dTZx" target="_blank" class="youtube"></a>
+        <a href="https://www.instagram.com/gamble_couple666/profilecard/?igsh=OGt1ZGJndHNiMTB4" target="_blank" class="instagram"></a>
+        <a href="https://lin.ee/ivW2LRm" target="_blank" class="line"></a>
     </div>
 </div>
 
 <script>
+    const HV_VALUES = {1: 9, 2: 8, 3: 7, 4: 6, 5: 5, 6: 1, 7: 3, 8: 2, 9: 2};
+    const AG_VALUES = {0: -4, 1: -5, 2: -5, 3: -2, 4: -1, 5: -1, 6: 3, 7: 4, 8: 5, 9: 6};
     const history = [];
-    const MAX_HISTORY = 36;
 
     function checkFormula() {
         document.getElementById("predictionResult").innerText = "等待輸入...";
@@ -263,41 +341,91 @@
         const playerInput = document.getElementById('player').value.padEnd(3, '0');
         const bankerInput = document.getElementById('banker').value.padEnd(3, '0');
 
-        if (!/^[0-9]+$/.test(playerInput) || !/^[0-9]+$/.test(bankerInput)) {
-            alert("請確認輸入正確的牌點數！");
+        if (!/^[0-9]+$/.test(playerInput) || !/^[0-9]+$/.test(bankerInput) || playerInput.length !== 3 || bankerInput.length !== 3) {
+            alert("請確保輸入的牌點數為三位數字，無補牌時請輸入0。");
             return;
         }
 
         const playerPoints = (parseInt(playerInput[0]) + parseInt(playerInput[1]) + parseInt(playerInput[2])) % 10;
         const bankerPoints = (parseInt(bankerInput[0]) + parseInt(bankerInput[1]) + parseInt(bankerInput[2])) % 10;
+        let actualOutcome = playerPoints > bankerPoints ? "閒" : bankerPoints > playerPoints ? "莊" : "和";
 
-        if (history.length >= MAX_HISTORY) {
-            alert("建議尋找新的房間，歷史記錄已滿！");
-            clearAll();
+        if (history.length < 2) {
+            history.push({ actual: actualOutcome });
+            updateHistoryDisplay();
+            clearInputs();
+            return;
         }
 
-        const actualOutcome = playerPoints > bankerPoints ? "閒" : bankerPoints > playerPoints ? "莊" : "和";
-        history.push({ actual: actualOutcome });
+        const playerHV = calculateHV(playerInput);
+        const bankerHV = calculateHV(bankerInput);
 
-        document.getElementById("predictionResult").innerText = "計算完成！";
+        const previousOutcome = history[history.length - 1];
+        const pointDifference = Math.abs(playerPoints - bankerPoints);
+        const playerAG = AG_VALUES[pointDifference];
+        const bankerAG = AG_VALUES[pointDifference];
+
+        const playerTP = playerAG !== 0 ? playerHV / playerAG : 0;
+        const bankerTP = bankerAG !== 0 ? bankerHV / bankerAG : 0;
+
+        let recommendation = "看一把";
+        if (playerTP > bankerTP) {
+            recommendation = "推薦下閒";
+        } else if (bankerTP > playerTP) {
+            recommendation = "推薦下莊";
+        }
+
+        history.push({ actual: actualOutcome, recommended: recommendation });
+        document.getElementById("predictionResult").innerText = recommendation;
         updateHistoryDisplay();
+        clearInputs();
+    }
+
+    function calculateHV(cards) {
+        return Array.from(cards).reduce((max, card) => {
+            const value = parseInt(card);
+            return Math.max(max, HV_VALUES[value] || 0);
+        }, 0);
     }
 
     function updateHistoryDisplay() {
-        const items = document.querySelectorAll(".grid-item");
-        items.forEach((item, index) => {
-            item.className = "grid-item"; 
-            if (history[index]) {
-                if (history[index].actual === "莊") item.classList.add("zhuang");
-                if (history[index].actual === "閒") item.classList.add("xian");
-                if (history[index].actual === "和") item.classList.add("heju");
+        const historyDisplay = document.getElementById("historyDisplay");
+        const items = historyDisplay.querySelectorAll(".grid-item");
+
+        items.forEach(item => {
+            item.classList.remove('zhuang', 'xian', 'heju');
+            item.innerText = '';
+        });
+
+        history.forEach((entry, index) => {
+            const row = index % 6;
+            const col = Math.floor(index / 6);
+            const targetIndex = row * 6 + col;
+            const targetItem = items[targetIndex];
+            
+            if (entry.actual === "莊") {
+                targetItem.classList.add("zhuang");
+                targetItem.innerText = "莊";
+            } else if (entry.actual === "閒") {
+                targetItem.classList.add("xian");
+                targetItem.innerText = "閒";
+            } else {
+                targetItem.classList.add("heju");
+                targetItem.innerText = "和";
             }
         });
     }
 
+    function clearInputs() {
+        document.getElementById("player").value = "";
+        document.getElementById("banker").value = "";
+    }
+
     function clearAll() {
-        history.length = 0;
+        document.getElementById("player").value = "";
+        document.getElementById("banker").value = "";
         document.getElementById("predictionResult").innerText = "等待輸入...";
+        history.length = 0;
         updateHistoryDisplay();
     }
 </script>
